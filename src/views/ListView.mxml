@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" title="Who's in Trouble?" creationComplete="init(event)">
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" cacheAsBitmap="true" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Who's in Trouble?" keyDown="keyPress(event)" creationComplete="init(event)">
 	
 	<fx:Script>
 		<![CDATA[
@@ -9,22 +9,24 @@
 			
 			import spark.primitives.BitmapImage;
 			import spark.transitions.FlipViewTransition;
+			import spark.transitions.SlideViewTransition;
 			
 			[Bindable]
 			protected var kids:ArrayCollection = new ArrayCollection();
 			protected var kidsService:Kids = new Kids();
+			protected var dataToPush:Object = new Object();
 			
-			
-			protected function kidList_clickHandler(event:MouseEvent):void
-			{
-				if (kidList.selectedItem != null){
-					navigator.pushView(TimerView,kidList.selectedItem);
-				}
-			}
 			
 			protected function init(event:FlexEvent):void
 			{
-				var kidsService:Kids = new Kids();
+				
+				
+				
+				dataToPush.kidsService = kidsService;
+				dataToPush.position = -1;
+				dataToPush.kid = new Object();
+				dataToPush.kid.name = "New Kid";
+				
 				kids = kidsService.list;
 				
 				if (kids.length == 0){
@@ -32,55 +34,63 @@
 					var trans:FlipViewTransition = new FlipViewTransition();
 					trans.direction = "up";
 					
-					var dataToPush:Object = new Object();
-					dataToPush.kidsService = kidsService;
-					dataToPush.position = -1;
-					dataToPush.kid = new Object();
-					dataToPush.kid.name = "New Kid";
 					navigator.pushView(ChildEdit,dataToPush);
 				}
 				
 			}
 			
+			protected function kidList_clickHandler(event:MouseEvent):void
+			{
+				if (kidList.selectedItem != null){
+					dataToPush.position = -1;
+					dataToPush.kid = kidList.selectedItem;
+					navigator.pushView(TimerView,dataToPush);
+				}
+			}
+			
+			
+			
 			protected function editButton_clickHandler(event:MouseEvent):void
 			{
-			
 				
-				
-				var trans:FlipViewTransition = new FlipViewTransition();
-				trans.direction = "up";
 				
 				if (kids.length == 0){
-					var dataToPush:Object = new Object();
-					dataToPush.kidsService = kidsService;
-					dataToPush.position = -1;
-					dataToPush.kid = new Object();
-					dataToPush.kid.name = "New Kid";
-					navigator.pushView(ChildEdit,dataToPush,null,trans);
+					navigator.pushView(ChildEdit,dataToPush);
 				}
 				else{
-					navigator.pushView(ListEdit,null,null,trans);
+					navigator.pushView(ListEdit,dataToPush);
 				}
 				
 				
 				
 			}
 			
+			
+			protected function keyPress(event:KeyboardEvent):void
+			{
+				trace(event.keyCode);
+				
+				if (event.keyCode == Keyboard.MENU){
+					
+					var trans:FlipViewTransition = new FlipViewTransition();
+					trans.direction = "up";
+					
+					navigator.pushView(views.ListEdit,null,null,trans);
+				}
+			}
+			
 		]]>
 	</fx:Script>
-	<fx:Declarations>
-		<s:BitmapImage id="bm" source="assets/plus.png" />  
-	</fx:Declarations>
 	
 	<s:actionContent>
 		<s:Button id="editButton"  click="editButton_clickHandler(event)" icon="@Embed('assets/pencilangled.png')"   />
 	</s:actionContent>
 	
 	
-	<s:List   id="kidList" left="10" right="10" top="10" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)">
-		<s:itemRenderer>
+	<s:List id="kidList" left="10" right="10" top="10" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)" cacheAsBitmap="true">
+		<s:itemRenderer >
 			<fx:Component>
-				<s:IconItemRenderer messageFunction="secondsToTimer" decorator="@Embed('assets/clock.png')" alternatingItemColors="['0xffffff','0xF8F7CE']">
+				<s:IconItemRenderer messageFunction="secondsToTimer" decorator="@Embed('assets/clock.png')" alternatingItemColors="['0xffffff','0xF8F7CE']" cacheAsBitmap="true">
 					<fx:Script>
 						<![CDATA[
 							

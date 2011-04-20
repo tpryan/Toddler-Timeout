@@ -6,33 +6,44 @@
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
-			import spark.transitions.FlipViewTransition;
 			
-			protected var kidsService:Kids = new Kids();
+			import spark.transitions.FlipViewTransition;
+			import spark.transitions.SlideViewTransition;
+			
+			protected var kidsService:Kids = null;
 			[Bindable]
 			protected var kids:ArrayCollection = new ArrayCollection();
+			protected var dataToPush:Object = new Object();
+			
+			protected function init(event:FlexEvent):void
+			{
+				
+				if (data.kidService != null){
+					kidsService = data.kidsService;
+				}
+				else{
+					kidsService = new Kids();
+				}
+				
+				kids = kidsService.list;
+				
+				dataToPush.kidService = kidsService;
+			}
 			
 			protected function kidList_clickHandler(event:MouseEvent):void
 			{
-				var dataToPush:Object = new Object();
+				
 				dataToPush.position = kidList.selectedIndex;
 				dataToPush.kid = kidList.selectedItem;
-				
-				
 				navigator.pushView(ChildEdit,dataToPush);
 				
 			}
 			
-			protected function init(event:FlexEvent):void
-			{
-				kids = kidsService.list;
-			}
+			
 			
 			protected function backButton_clickHandler(event:MouseEvent):void
 			{
-				var trans:FlipViewTransition = new FlipViewTransition();
-				trans.direction = "down";
-				navigator.popView(trans);
+				navigator.popView();
 			}
 			
 			protected function newButton_clickHandler(event:MouseEvent):void
@@ -42,8 +53,6 @@
 				dataToPush.position = -1;
 				dataToPush.kid = new Object();
 				dataToPush.kid.name = "New Kid";
-				
-				
 				navigator.pushView(ChildEdit,dataToPush);
 				
 			}
@@ -63,10 +72,10 @@
 		<s:Button id="newButton" click="newButton_clickHandler(event)"  icon="@Embed('assets/plus.png')"  />
 	</s:actionContent>
 	
-	<s:List id="kidList" left="10" right="10" top="10" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)">
+	<s:List id="kidList" left="10" right="10" top="10" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)" cacheAsBitmap="true" >
 		<s:itemRenderer>
 			<fx:Component>
-				<s:IconItemRenderer messageFunction="secondsToTimer" decorator="@Embed('assets/pencilangled.png')" alternatingItemColors="['0xf7f7f7','0xFFFFF3']">
+				<s:IconItemRenderer messageFunction="secondsToTimer" decorator="@Embed('assets/pencilangled.png')" alternatingItemColors="['0xf7f7f7','0xFFFFF3']" cacheAsBitmap="true">
 					<fx:Script>
 						<![CDATA[
 							

@@ -2,7 +2,8 @@
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
 		xmlns:s="library://ns.adobe.com/flex/spark"
 		xmlns:mx="library://ns.adobe.com/flex/mx" 
-		title="Time Out!" creationComplete="view1_creationCompleteHandler(event)"
+		title="Time Out!" creationComplete="init(event)" viewDeactivate="onDeactivate()"
+		cacheAsBitmap="true"
 		>
 	<fx:Script>
 		<![CDATA[
@@ -20,9 +21,9 @@
 			[Bindable]
 			protected var seconds:String = "";
 
-			
 			[Bindable]
-			protected var timerData:ArrayCollection = new ArrayCollection();
+			protected var clockChartData:ArrayCollection = new ArrayCollection();
+			
 			protected var timer:Timer = new Timer(1,1);
 			protected var timeOutLength:int = 0;
 			protected var snd:Sound = null;
@@ -36,8 +37,29 @@
 			[Embed(source='assets/rewindtostart.png')]
 			private static var Restart:Class;
 			
-			protected function checkOrientation():void{
+			
+			protected function init(event:FlexEvent):void
+			{
+				clockChartData = 
+					new ArrayCollection( [
+						{name: "completed", value: 0 },
+						{name: "uncomplete", value:  data.kid.timeout }
+						
+						
+					]);
 				
+				this.addEventListener(ResizeEvent.RESIZE, onResizeView);
+				
+				setClockReadoutFromSeconds(data.kid.timeout);
+				countDownText.text = minutes + ":" + seconds;
+				
+				timeOutLength = data.kid.timeout;
+				timer.repeatCount = timeOutLength;
+				timer.delay = 1000;
+				
+			}
+			
+			protected function checkOrientation():void{
 				
 				if (stage.stageWidth > stage.stageHeight){
 					currentState = "landscape";
@@ -51,35 +73,15 @@
 			protected function onResizeView(event:ResizeEvent):void
 			{
 				checkOrientation();
-				trace('onResizeView fired')
 			}
 			
-			protected function view1_creationCompleteHandler(event:FlexEvent):void
+			protected function onDeactivate():void
 			{
-				
-				
-				timerData = 
-					new ArrayCollection( [
-						{name: "completed", value: 0 },
-						{name: "uncomplete", value:  data.timeout }
-						
-						 
-					]);
-				
-				this.addEventListener(ResizeEvent.RESIZE, onResizeView);
-				
-				setTimerFromSeconds(data.timeout);
-				countDownText.text = minutes + ":" + seconds;
-			
-				timeOutLength = data.timeout;
-				timer.repeatCount = timeOutLength;
-				timer.delay = 1000;
-				
-				
-				
+				timer.stop();
 			}
 			
-			private function setTimerFromSeconds(allSeconds:int):void{
+			
+			private function setClockReadoutFromSeconds(allSeconds:int):void{
 				var min:int = Math.floor(allSeconds/60); 
 				var sec:int = allSeconds % 60;
 				
@@ -96,19 +98,19 @@
 			protected function timerButton_clickHandler(event:MouseEvent):void
 			{
 				
-				if (data.timeout > 0){
+				if (data.kid.timeout > 0){
 				
 					if (timer.running == false){
 						timer.start();
 						timer.addEventListener(TimerEvent.TIMER, timerProcess);
 						timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerEnd);
-						
 						timerButton.setStyle("icon", Restart);
 						timerProcess(null);
 					}
 					else{
 						timer.reset();
 						timer.start();
+						timerProcess(null);
 						if (isPlaying){
 							snd.close();
 							isPlaying = false;
@@ -125,14 +127,14 @@
 			{
 				var timeLeft:int = timeOutLength - timer.currentCount;
 				
-				timerData = 
+				clockChartData = 
 					new ArrayCollection( [
 						{name: "completed", value: timer.currentCount },
 						{name: "uncomplete", value:  timeLeft }
 						
 					]);
 				
-				setTimerFromSeconds(timeLeft);
+				setClockReadoutFromSeconds(timeLeft);
 				countDownText.text = minutes + ":" + seconds;
 				radialStroke.alpha = 1;
 			}
@@ -155,7 +157,6 @@
 			
 			protected function backButton_clickHandler(event:MouseEvent):void
 			{
-				timer.stop();
 				navigator.popView();
 			}
 			
@@ -175,6 +176,7 @@
 					clock.height = stage.stageWidth - 20;
 				}
 			}
+			
 			
 		]]>
 	</fx:Script>
@@ -197,10 +199,10 @@
 				 left.landscape="10" top.landscape="10" bottom.landscape="100"
 				 horizontalCenter.portrait="0">
 		<mx:series>
-			<mx:PieSeries dataProvider="{timerData}" field="value" filters="[]">
+			<mx:PieSeries dataProvider="{clockChartData}" field="value" filters="[]">
 				<mx:fills>
-					<s:SolidColor color="0x00FF00" />
-					<s:SolidColor color="0xFF0000" />
+					<s:SolidColor color="0xDDDDDD" />
+					<s:SolidColor color="0xF8F7CE" />
 				</mx:fills>
 				<mx:stroke>
 					<mx:Stroke color="0x333333" weight="2" />
@@ -217,7 +219,7 @@
 	
 	
 	<s:Button id="timerButton" bottom="10" left="10" right="10" click="timerButton_clickHandler(event)"  icon="@Embed('assets/play.png')" iconPlacement="right"  />
-	<s:Label id="countDownText" fontSize="60" textAlign="center"
+	<s:Label id="countDownText" fontSize="80" textAlign="center"
 			 left.landscape="{clock.x + clock.width+ 10}" right.landscape="10" textAlign.landscape="left"
 			 verticalCenter.landscape="-35"
 			 top.portrait="{(clock.height/2)-(countDownText.height/2)}" left.portrait="10" right.portrait="10"

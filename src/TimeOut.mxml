@@ -2,7 +2,7 @@
 <s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 							xmlns:s="library://ns.adobe.com/flex/spark"
 							splashScreenImage="@Embed('assets/splashScreen.png')"
-							firstView="views.ListView" creationComplete="init(event)">
+							firstView="views.ListView" creationComplete="init(event)" >
 	
 	<fx:Style source="main.css" />
 	
@@ -12,6 +12,8 @@
 			import com.terrenceryan.fonts.ComicSerifTLF;
 			
 			import mx.events.FlexEvent;
+			
+			import spark.transitions.FlipViewTransition;
 			
 			protected function init(event:FlexEvent):void
 			{
@@ -35,6 +37,8 @@
 					trace(key.fontName + " - " + key.fontStyle + " - " + key.fontType);
 				}
 			}
+			
+			
 			
 		]]>
 	</fx:Script>
