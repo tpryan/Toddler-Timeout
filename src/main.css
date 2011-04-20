@@ -1,0 +1,46 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+s|List{
+	contentBackgroundColor: #ffffff;
+}
+
+s|View{
+	backgroundColor: #f0f0f0;
+}
+
+global
+{
+	font-family: "HVD Comic Serif Pro";
+}
+
+s|ActionBar 
+{
+	chrome-color: #EBEAC3;
+	
+}
+
+s|Button 
+{
+	chrome-color: #EBEAC3;
+	
+}
+
+s|ActionBar #titleDisplay
+{
+	color: #FF0000;
+	font-weight: normal;
+	
+}
+
+
+s|IconItemRenderer {
+	chromeColor: #FF0000;
+	contentBackgroundColor: #FF0000;
+	rollOverColor: #FF0000;
+	focusColor: #FF0000;
+	selectionColor: #FF0000;
+	color: #000000;
+	
+}

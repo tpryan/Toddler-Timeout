@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							xmlns:s="library://ns.adobe.com/flex/spark"
+							splashScreenImage="@Embed('assets/splashScreen.png')"
+							firstView="views.ChildSelector" creationComplete="init(event)">
+	
+	<fx:Style source="main.css" />
+	
+	<fx:Script>
+		<![CDATA[
+			import com.terrenceryan.fonts.ComicSerif;
+			import com.terrenceryan.fonts.ComicSerifTLF;
+			
+			import mx.events.FlexEvent;
+			
+			protected function init(event:FlexEvent):void
+			{
+				NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, onDeactivateApp);
+				getFonts();
+			}
+			
+			protected function onDeactivateApp(event:Event):void
+			{
+				NativeApplication.nativeApplication.exit();
+				
+			}
+			
+			private function getFonts():void
+			{
+				var myFont1:Font = new ComicSerifTLF() as Font;
+				var myFont2:Font = new ComicSerif() as Font;
+				var fonts:Array = Font.enumerateFonts();
+				for each (var key:Font in fonts)
+				{
+					trace(key.fontName + " - " + key.fontStyle + " - " + key.fontType);
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+</s:ViewNavigatorApplication>

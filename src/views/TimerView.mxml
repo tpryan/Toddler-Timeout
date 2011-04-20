@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+		title="Time Out!" creationComplete="view1_creationCompleteHandler(event)"
+		>
+	<fx:Script>
+		<![CDATA[
+			import flash.events.KeyboardEvent;
+			import flash.utils.Timer;
+			
+			import mx.collections.ArrayCollection;
+			import mx.effects.easing.*;
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			[Bindable]
+			protected var minutes:String = "";
+			
+			[Bindable]
+			protected var seconds:String = "";
+
+			
+			[Bindable]
+			protected var timerData:ArrayCollection = new ArrayCollection();
+			protected var timer:Timer = new Timer(1,1);
+			protected var timeOutLength:int = 0;
+			protected var snd:Sound = null;
+			
+			private var isPlaying:Boolean = false;
+			
+			
+			[Embed(source='assets/reload.png')]
+			private static var Reload:Class;
+			
+			[Embed(source='assets/rewindtostart.png')]
+			private static var Restart:Class;
+			
+			protected function checkOrientation():void{
+				
+				
+				if (stage.stageWidth > stage.stageHeight){
+					currentState = "landscape";
+				}
+				else{
+					currentState= "portrait";
+				}
+				
+			}
+			
+			protected function onResizeView(event:ResizeEvent):void
+			{
+				checkOrientation();
+				trace('onResizeView fired')
+			}
+			
+			protected function view1_creationCompleteHandler(event:FlexEvent):void
+			{
+				
+				
+				timerData = 
+					new ArrayCollection( [
+						{name: "completed", value: 0 },
+						{name: "uncomplete", value:  data.timeout }
+						
+						 
+					]);
+				
+				this.addEventListener(ResizeEvent.RESIZE, onResizeView);
+				
+				setTimerFromSeconds(data.timeout);
+				countDownText.text = minutes + ":" + seconds;
+			
+				timeOutLength = data.timeout;
+				timer.repeatCount = timeOutLength;
+				timer.delay = 1000;
+				
+				
+				
+			}
+			
+			private function setTimerFromSeconds(allSeconds:int):void{
+				var min:int = Math.floor(allSeconds/60); 
+				var sec:int = allSeconds % 60;
+				
+				minutes = min.toString();
+				seconds = sec.toString();
+				
+				if (seconds.length == 1){
+					seconds = "0" + seconds;
+				}
+				
+			}
+			
+			
+			protected function timerButton_clickHandler(event:MouseEvent):void
+			{
+				
+				if (data.timeout > 0){
+				
+					if (timer.running == false){
+						timer.start();
+						timer.addEventListener(TimerEvent.TIMER, timerProcess);
+						timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerEnd);
+						
+						timerButton.setStyle("icon", Restart);
+						timerProcess(null);
+					}
+					else{
+						timer.reset();
+						timer.start();
+						if (isPlaying){
+							snd.close();
+							isPlaying = false;
+						}
+					}
+				}
+				else{
+					countDownText.text = "0 Seconds?  Discipline Fail!";
+				}
+				
+			}
+			
+			protected function timerProcess(event:TimerEvent):void
+			{
+				var timeLeft:int = timeOutLength - timer.currentCount;
+				
+				timerData = 
+					new ArrayCollection( [
+						{name: "completed", value: timer.currentCount },
+						{name: "uncomplete", value:  timeLeft }
+						
+					]);
+				
+				setTimerFromSeconds(timeLeft);
+				countDownText.text = minutes + ":" + seconds;
+				radialStroke.alpha = 1;
+			}
+			
+			
+			protected function timerEnd(event:TimerEvent):void
+			{
+				timerButton.setStyle("icon", Reload);
+				countDownText.text = "Hug it out!";
+				timer = new Timer(1000,timeOutLength);
+				snd = new Sound( new URLRequest("assets/alarm.wav") );
+				snd.play(0,2);
+				snd.addEventListener(Event.COMPLETE, stopSound);
+				isPlaying = true;
+				radialStroke.alpha = 0;
+				
+				
+			}
+			
+			
+			protected function backButton_clickHandler(event:MouseEvent):void
+			{
+				timer.stop();
+				navigator.popView();
+			}
+			
+			protected function stopSound(event:Event):void
+			{
+				isPlaying = false;
+				
+			}
+			
+			protected function setChartSize(e:Event):void{
+				if(currentState == "landscape"){
+					clock.width = stage.stageHeight - 180;
+					clock.height = stage.stageHeight - 180;
+				}
+				else{
+					clock.width = stage.stageWidth - 20;
+					clock.height = stage.stageWidth - 20;
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="portrait"/>
+		<s:State name="landscape"/>
+	</s:states>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:navigationContent>
+		<s:Button id="backButton" click="backButton_clickHandler(event)"  icon="@Embed('assets/arrowleft.png')"  />
+	</s:navigationContent>
+	
+	
+	
+	
+	<mx:PieChart id="clock" top="10" rotation="-90" render="setChartSize(event)" resize="setChartSize(event)"
+				 left.landscape="10" top.landscape="10" bottom.landscape="100"
+				 horizontalCenter.portrait="0">
+		<mx:series>
+			<mx:PieSeries dataProvider="{timerData}" field="value" filters="[]">
+				<mx:fills>
+					<s:SolidColor color="0x00FF00" />
+					<s:SolidColor color="0xFF0000" />
+				</mx:fills>
+				<mx:stroke>
+					<mx:Stroke color="0x333333" weight="2" />
+				</mx:stroke>
+				<mx:radialStroke>
+					<mx:Stroke id="radialStroke" color="0x666666" weight="1" alpha="0" />
+				</mx:radialStroke>
+				<mx:showDataEffect>
+					<mx:SeriesInterpolate duration="200" easingFunction="{Circular.easeInOut}"   />
+				</mx:showDataEffect>
+			</mx:PieSeries>
+		</mx:series>
+	</mx:PieChart>
+	
+	
+	<s:Button id="timerButton" bottom="10" left="10" right="10" click="timerButton_clickHandler(event)"  icon="@Embed('assets/play.png')" iconPlacement="right"  />
+	<s:Label id="countDownText" fontSize="60" textAlign="center"
+			 left.landscape="{clock.x + clock.width+ 10}" right.landscape="10" textAlign.landscape="left"
+			 verticalCenter.landscape="-35"
+			 top.portrait="{(clock.height/2)-(countDownText.height/2)}" left.portrait="10" right.portrait="10"
+			 horizontalCenter.portrait="0"/>
+</s:View>

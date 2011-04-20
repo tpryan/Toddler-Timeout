@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Edit List" creationComplete="init(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import spark.transitions.FlipViewTransition;
+			
+			protected var kidsService:Kids = new Kids();
+			[Bindable]
+			protected var kids:ArrayCollection = new ArrayCollection();
+			
+			protected function kidList_clickHandler(event:MouseEvent):void
+			{
+				var dataToPush:Object = new Object();
+				dataToPush.position = kidList.selectedIndex;
+				dataToPush.kid = kidList.selectedItem;
+				
+				
+				navigator.pushView(ChildEdit,dataToPush);
+				
+			}
+			
+			protected function init(event:FlexEvent):void
+			{
+				kids = kidsService.list;
+			}
+			
+			protected function backButton_clickHandler(event:MouseEvent):void
+			{
+				var trans:FlipViewTransition = new FlipViewTransition();
+				trans.direction = "down";
+				navigator.popView(trans);
+			}
+			
+			protected function newButton_clickHandler(event:MouseEvent):void
+			{
+				var dataToPush:Object = new Object();
+				dataToPush.kidsService = kidsService;
+				dataToPush.position = -1;
+				dataToPush.kid = new Object();
+				dataToPush.kid.name = "New Kid";
+				
+				
+				navigator.pushView(ChildEdit,dataToPush);
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:navigationContent>
+		<s:Button id="backButton" click="backButton_clickHandler(event)"  icon="@Embed('assets/arrowleft.png')"  />
+	</s:navigationContent>
+	
+	<s:actionContent>
+		<s:Button id="newButton" click="newButton_clickHandler(event)"  icon="@Embed('assets/plus.png')"  />
+	</s:actionContent>
+	
+	<s:List id="kidList" left="10" right="10" top="10" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)">
+		<s:itemRenderer>
+			<fx:Component>
+				<s:IconItemRenderer messageFunction="secondsToTimer" decorator="@Embed('assets/pencilangled.png')" alternatingItemColors="['0xf7f7f7','0xFFFFF3']">
+					<fx:Script>
+						<![CDATA[
+							
+							private function secondsToTimer(ob:Object):String{
+								
+								
+								var min:int = Math.floor(ob.timeout/60); 
+								var sec:int = ob.timeout % 60;
+								
+								var minutes:String = min.toString();
+								var seconds:String = sec.toString();
+								
+								if (seconds.length == 1){
+									seconds = "0" + seconds;
+								}
+								
+								var result:String = minutes + ":" + seconds;
+								
+								return result;
+							}
+							
+						]]>
+					</fx:Script>
+					
+				</s:IconItemRenderer>
+			</fx:Component>
+		</s:itemRenderer>
+	</s:List>
+</s:View>

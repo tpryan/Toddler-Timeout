@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="{data.kid.name}" creationComplete="init(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			[Bindable]
+			protected var kid:Object = new Object;
+			protected var kidService:Kids = new Kids();
+			protected var position:Number = -1;
+			
+			protected function backButton_clickHandler(event:MouseEvent):void
+			{
+				navigator.popView();
+			}
+			
+			protected function init(event:FlexEvent):void
+			{
+				kid = data.kid;
+				position = data.position;
+				var minutes:int = Math.floor(kid.timeout/60); 
+				var seconds:int = kid.timeout % 60;
+				
+				timeoutMinutesField.text = minutes.toString();
+				timeoutSecondsField.text = seconds.toString();
+				
+				if (kid.name == "New Kid"){
+					nameField.setStyle("color",0xAAAAAA);
+					nameField.addEventListener(FocusEvent.FOCUS_IN, fieldReset);
+					
+					timeoutMinutesField.text = "mm";
+					timeoutMinutesField.setStyle("color",0xAAAAAA);
+					timeoutMinutesField.addEventListener(FocusEvent.FOCUS_IN, fieldReset);
+					timeoutSecondsField.text = "ss";
+					timeoutSecondsField.setStyle("color",0xAAAAAA);
+					timeoutSecondsField.addEventListener(FocusEvent.FOCUS_IN, fieldReset);
+				}
+				
+				displaySeconds();
+				
+				
+				
+			}
+			
+			protected function displaySeconds():void{
+				if (timeoutSecondsField.text.length == 1){
+					timeoutSecondsField.text = "0" + timeoutSecondsField.text;
+				}
+			}
+			
+			protected function deleteButton_clickHandler(event:MouseEvent):void
+			{
+				if (position > -1){	
+					kidService.destroy(position);
+				}
+				navigator.popView();
+				
+			}
+			
+			protected function saveButton_clickHandler(event:MouseEvent):void
+			{
+				trace(kid.timeout);
+				var minutesAsSeconds:int = parseInt(timeoutMinutesField.text)* 60;
+				var seconds:int = parseInt(timeoutSecondsField.text);
+				seconds = seconds + minutesAsSeconds;
+					
+				kid.timeout = seconds;
+				kid.name = nameField.text;
+				trace("timeoutMinutesField.text: " + timeoutMinutesField.text);
+				trace("timeoutSecondsField.text: " + timeoutSecondsField.text);
+				trace(kid.timeout);
+				
+				
+				kidService.save(kid,position);
+				navigator.popView();
+				
+			}
+			
+			protected function fieldReset(event:FocusEvent):void
+			{
+			
+				event.currentTarget.setStyle("color", 0x000000);
+				event.currentTarget.removeEventListener(FocusEvent.FOCUS_IN, fieldReset);
+				event.currentTarget.text = "";
+				
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	
+	
+	<s:navigationContent>
+		<s:Button id="backButton" click="backButton_clickHandler(event)"  icon="@Embed('assets/arrowleft.png')"  />
+	</s:navigationContent>
+	
+	<s:actionContent>
+		<s:Button id="deleteButton" click="deleteButton_clickHandler(event)"  icon="@Embed('assets/delete.png')"  />
+	</s:actionContent>
+	
+	<s:Group top="10" left="10" right="10">
+		<s:layout>
+			<s:FormLayout paddingBottom="20" />
+		</s:layout>
+		
+		<s:Label id="nameLabel"  text="Name:"/>
+		<s:TextInput id="nameField" text="{kid.name}" width="100%"    textAlign="left"/>
+		<s:Label text="Length of timeout"/>
+		
+		<s:Group>
+			<s:layout>
+				<s:HorizontalLayout />
+			</s:layout>
+			<s:TextInput id="timeoutMinutesField"  textAlign="right" width="80" />
+			<s:Label  text=":"/>
+			<s:TextInput id="timeoutSecondsField"  textAlign="right" width="80" focusOut="displaySeconds()" />
+		</s:Group>
+		
+		
+		
+		<s:Button id="saveButton" width="100%" click="saveButton_clickHandler(event)"
+				  icon="@Embed('assets/disk.png')" iconPlacement="right"/>
+	</s:Group>
+	
+	
+	
+	
+</s:View>
