@@ -199,7 +199,7 @@
 				 left.landscape="10" top.landscape="10" bottom.landscape="100"
 				 horizontalCenter.portrait="0">
 		<mx:series>
-			<mx:PieSeries dataProvider="{clockChartData}" field="value" filters="[]">
+			<mx:PieSeries dataProvider="{clockChartData}" field="value" filters="[]" click="timerButton_clickHandler(event)">
 				<mx:fills>
 					<s:SolidColor color="0xDDDDDD" />
 					<s:SolidColor color="0xF8F7CE" />
@@ -222,6 +222,6 @@
 	<s:Label id="countDownText" fontSize="80" textAlign="center"
 			 left.landscape="{clock.x + clock.width+ 10}" right.landscape="10" textAlign.landscape="left"
 			 verticalCenter.landscape="-35"
-			 top.portrait="{(clock.height/2)-(countDownText.height/2)}" left.portrait="10" right.portrait="10"
+			 top.portrait="{(clock.height/2)-(countDownText.height/2)}" left.portrait="20" right.portrait="20"
 			 horizontalCenter.portrait="0"/>
 </s:View>

@@ -20,8 +20,6 @@
 			protected function init(event:FlexEvent):void
 			{
 				
-				
-				
 				dataToPush.kidsService = kidsService;
 				dataToPush.position = -1;
 				dataToPush.kid = new Object();
@@ -38,6 +36,7 @@
 				}
 				
 			}
+			
 			
 			protected function kidList_clickHandler(event:MouseEvent):void
 			{
@@ -75,7 +74,7 @@
 					var trans:FlipViewTransition = new FlipViewTransition();
 					trans.direction = "up";
 					
-					navigator.pushView(views.ListEdit,null,null,trans);
+					navigator.pushView(views.ListEdit,dataToPush,null,trans);
 				}
 			}
 			
@@ -90,13 +89,20 @@
 	<s:List id="kidList" left="10" right="10" top="10" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)" cacheAsBitmap="true">
 		<s:itemRenderer >
 			<fx:Component>
-				<s:IconItemRenderer messageFunction="secondsToTimer" decorator="@Embed('assets/clock.png')" alternatingItemColors="['0xffffff','0xF8F7CE']" cacheAsBitmap="true">
+				<s:IconItemRenderer creationComplete="styleText()" messageFunction="secondsToTimer" decorator="@Embed('assets/clock.png')" alternatingItemColors="['0xffffff','0xF8F7CE']" cacheAsBitmap="true">
+					
+					
 					<fx:Script>
 						<![CDATA[
 							
+							private function styleText():void{
+								labelDisplay.setStyle("fontSize", 50);
+								messageDisplay.setStyle("fontSize", 24);
+								messageDisplay.setStyle("color", 0x61656A);
+							}
+							
 							private function secondsToTimer(ob:Object):String{
-								
-								
+								styleText();
 								var min:int = Math.floor(ob.timeout/60); 
 								var sec:int = ob.timeout % 60;
 								

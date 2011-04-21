@@ -112,7 +112,7 @@
 		
 		<s:Label id="nameLabel"  text="Name:"/>
 		<s:TextInput id="nameField" text="{kid.name}" width="100%"    textAlign="left"/>
-		<s:Label text="Length of timeout"/>
+		<s:Label text="How Long?"/>
 		
 		<s:Group>
 			<s:layout>

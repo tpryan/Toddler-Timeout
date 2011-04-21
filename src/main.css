@@ -13,11 +13,13 @@ s|View{
 global
 {
 	font-family: "HVD Comic Serif Pro";
+	font-size: 35;
 }
 
 s|ActionBar 
 {
 	chrome-color: #EBEAC3;
+	
 	
 }
 
@@ -31,8 +33,28 @@ s|ActionBar #titleDisplay
 {
 	color: #FF0000;
 	font-weight: normal;
+	font-size: 22;
 	
 }
+
+@media all and (application-dpi: 240) 
+{
+	s|ActionBar #titleDisplay
+	{
+		font-size: 35;
+		
+	}
+}
+
+@media all and (application-dpi: 320) 
+{
+	s|ActionBar #titleDisplay
+	{
+		font-size: 40;
+		
+	}
+}
+
 
 
 s|IconItemRenderer {
@@ -44,3 +66,4 @@ s|IconItemRenderer {
 	color: #000000;
 	
 }
+
