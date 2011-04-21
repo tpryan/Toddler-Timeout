@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
 		xmlns:s="library://ns.adobe.com/flex/spark"
-		xmlns:mx="library://ns.adobe.com/flex/mx" 
-		title="Time Out!" creationComplete="init(event)" viewDeactivate="onDeactivate()"
-		cacheAsBitmap="true"
-		>
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		cacheAsBitmap="true" creationComplete="init(event)" title="Time Out!"
+		viewDeactivate="onDeactivate()">
 	<fx:Script>
 		<![CDATA[
 			import flash.events.KeyboardEvent;
@@ -93,7 +92,7 @@
 			}
 			
 			
-			protected function timerButton_clickHandler(event:MouseEvent):void
+			protected function timerButton_clickHandler(event:Event):void
 			{
 				
 				if (data.kid.timeout > 0){
@@ -184,39 +183,46 @@
 	</fx:Declarations>
 	
 	<s:navigationContent>
-		<s:Button id="backButton" click="backButton_clickHandler(event)"  icon="@Embed('assets/arrowleft.png')"  />
+		<s:Button id="backButton" click="backButton_clickHandler(event)"
+				  icon="@Embed('assets/arrowleft.png')"/>
 	</s:navigationContent>
 	
 	
 	
 	
-	<mx:PieChart id="clock" top="10" rotation="-90" render="setChartSize(event)" resize="setChartSize(event)"
+	<mx:PieChart id="clock" top="10" render="setChartSize(event)" resize="setChartSize(event)"
+				 rotation="-90"
+				 click="timerButton_clickHandler(event)"
 				 left.landscape="10" top.landscape="10" bottom.landscape="100"
 				 horizontalCenter.portrait="0">
 		<mx:series>
-			<mx:PieSeries dataProvider="{clockChartData}" field="value" filters="[]" click="timerButton_clickHandler(event)">
+			<mx:PieSeries dataProvider="{clockChartData}" field="value" filters="[]">
 				<mx:fills>
-					<s:SolidColor color="0xDDDDDD" />
-					<s:SolidColor color="0xF8F7CE" />
+					<s:SolidColor color="0xDDDDDD"/>
+					<s:SolidColor color="0xF8F7CE"/>
 				</mx:fills>
 				<mx:stroke>
-					<mx:Stroke color="0x333333" weight="2" />
+					<mx:Stroke color="0x333333" weight="2"/>
 				</mx:stroke>
 				<mx:radialStroke>
-					<mx:Stroke id="radialStroke" color="0x666666" weight="1" alpha="0" />
+					<mx:Stroke id="radialStroke" alpha="0" color="0x666666" weight="1"/>
 				</mx:radialStroke>
 				<mx:showDataEffect>
-					<mx:SeriesInterpolate duration="200" easingFunction="{Circular.easeInOut}"   />
+					<mx:SeriesInterpolate duration="200" easingFunction="{Circular.easeInOut}"/>
 				</mx:showDataEffect>
 			</mx:PieSeries>
 		</mx:series>
 	</mx:PieChart>
 	
 	
-	<s:Button id="timerButton" bottom="10" left="10" right="10" click="timerButton_clickHandler(event)"  icon="@Embed('assets/play.png')" iconPlacement="right"  />
+	<s:Button id="timerButton" left="10" right="10" bottom="10"
+			  click="timerButton_clickHandler(event)" icon="@Embed('assets/play.png')"
+			  iconPlacement="right"/>
 	<s:Label id="countDownText" fontSize="80" textAlign="center"
-			 left.landscape="{clock.x + clock.width+ 10}" right.landscape="10" textAlign.landscape="left"
-			 verticalCenter.landscape="-35"
-			 top.portrait="{(clock.height/2)-(countDownText.height/2)}" left.portrait="20" right.portrait="20"
+			 click="timerButton_clickHandler(event)"
+			 left.landscape="{clock.x + clock.width+ 10}" right.landscape="10"
+			 textAlign.landscape="left" verticalCenter.landscape="-35"
+			 left.portrait="20" right.portrait="20"
+			 top.portrait="{(clock.height/2)-(countDownText.height/2)}"
 			 horizontalCenter.portrait="0"/>
 </s:View>
