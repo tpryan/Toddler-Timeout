@@ -82,14 +82,14 @@
 	</fx:Script>
 	
 	<s:actionContent>
-		<s:Button id="editButton"  click="editButton_clickHandler(event)" icon="@Embed('assets/pencilangled.png')"   />
+		<s:Button id="editButton"  click="editButton_clickHandler(event)" icon="@Embed('/assets/pencilangled.png')"   />
 	</s:actionContent>
 	
 	
 	<s:List id="kidList" left="10" right="10" top="10" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)" cacheAsBitmap="true">
 		<s:itemRenderer >
 			<fx:Component>
-				<s:IconItemRenderer creationComplete="styleText()" messageFunction="secondsToTimer" decorator="@Embed('assets/clock.png')" alternatingItemColors="['0xffffff','0xF8F7CE']" cacheAsBitmap="true">
+				<s:IconItemRenderer creationComplete="styleText()" messageFunction="secondsToTimer" decorator="@Embed('/assets/clock.png')" alternatingItemColors="['0xffffff','0xF8F7CE']" cacheAsBitmap="true">
 					
 					
 					<fx:Script>

@@ -77,6 +77,10 @@
 			<compiler.library-path dir="${FLEX_HOME}/frameworks" append="true">
                 <include name="libs/*" />
             </compiler.library-path>
+			
+			<compiler.library-path dir="libs" append="true">
+                <include name="*" />
+            </compiler.library-path>
 		</mxmlc>
 		
 	    </target>
@@ -95,6 +99,10 @@
 			
 			<compiler.library-path dir="${FLEX_HOME}/frameworks" append="true">
                 <include name="libs/*" />
+            </compiler.library-path>
+			
+			<compiler.library-path dir="libs" append="true">
+                <include name="*" />
             </compiler.library-path>
 		</mxmlc>
 		

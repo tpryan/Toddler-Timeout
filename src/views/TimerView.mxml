@@ -30,10 +30,10 @@
 			private var isPlaying:Boolean = false;
 			
 			
-			[Embed(source='assets/reload.png')]
+			[Embed(source='/assets/reload.png')]
 			private static var Reload:Class;
 			
-			[Embed(source='assets/rewindtostart.png')]
+			[Embed(source='/assets/rewindtostart.png')]
 			private static var Restart:Class;
 			
 			
@@ -184,7 +184,7 @@
 	
 	<s:navigationContent>
 		<s:Button id="backButton" click="backButton_clickHandler(event)"
-				  icon="@Embed('assets/arrowleft.png')"/>
+				  icon="@Embed('/assets/arrowleft.png')"/>
 	</s:navigationContent>
 	
 	
@@ -216,7 +216,7 @@
 	
 	
 	<s:Button id="timerButton" left="10" right="10" bottom="10"
-			  click="timerButton_clickHandler(event)" icon="@Embed('assets/play.png')"
+			  click="timerButton_clickHandler(event)" icon="@Embed('//assets/play.png')"
 			  iconPlacement="right"/>
 	<s:Label id="countDownText" fontSize="80" textAlign="center"
 			 click="timerButton_clickHandler(event)"

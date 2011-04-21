@@ -98,11 +98,11 @@
 	
 	
 	<s:navigationContent>
-		<s:Button id="backButton" click="backButton_clickHandler(event)"  icon="@Embed('assets/arrowleft.png')"  />
+		<s:Button id="backButton" click="backButton_clickHandler(event)"  icon="@Embed('/assets/arrowleft.png')"  />
 	</s:navigationContent>
 	
 	<s:actionContent>
-		<s:Button id="deleteButton" click="deleteButton_clickHandler(event)"  icon="@Embed('assets/delete.png')"  />
+		<s:Button id="deleteButton" click="deleteButton_clickHandler(event)"  icon="@Embed('/assets/delete.png')"  />
 	</s:actionContent>
 	
 	<s:Group top="10" left="10" right="10">
@@ -126,7 +126,7 @@
 		
 		
 		<s:Button id="saveButton" width="100%" click="saveButton_clickHandler(event)"
-				  icon="@Embed('assets/disk.png')" iconPlacement="right"/>
+				  icon="@Embed('/assets/disk.png')" iconPlacement="right"/>
 	</s:Group>
 	
 	

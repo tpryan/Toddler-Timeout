@@ -2,7 +2,7 @@
 <application xmlns="http://ns.adobe.com/air/application/2.6">
 	<id>com.terrenceryan.TimeOut</id>
 	<filename>Toddler TimeOut</filename>
-	<name>TimeOut!</name>
+	<name>ToddlerTimeOut!</name>
 	<versionNumber>0.9.0</versionNumber>
 	<versionLabel>Beta</versionLabel>
 	<description>A timeout timer for unruly kids.</description>
