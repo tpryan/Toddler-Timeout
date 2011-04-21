@@ -44,8 +44,6 @@
 					new ArrayCollection( [
 						{name: "completed", value: 0 },
 						{name: "uncomplete", value:  data.kid.timeout }
-						
-						
 					]);
 				
 				this.addEventListener(ResizeEvent.RESIZE, onResizeView);
@@ -150,8 +148,6 @@
 				snd.addEventListener(Event.COMPLETE, stopSound);
 				isPlaying = true;
 				radialStroke.alpha = 0;
-				
-				
 			}
 			
 			
@@ -163,7 +159,6 @@
 			protected function stopSound(event:Event):void
 			{
 				isPlaying = false;
-				
 			}
 			
 			protected function setChartSize(e:Event):void{
