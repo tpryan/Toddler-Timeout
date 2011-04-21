@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
 							xmlns:s="library://ns.adobe.com/flex/spark"
+							creationComplete="init(event)" firstView="views.ListView"
 							splashScreenImage="@Embed('assets/splashScreen.png')"
-							splashScreenScaleMode="none"
-							firstView="views.ListView" creationComplete="init(event)" >
-
+							splashScreenScaleMode="none">
 	
-	<fx:Style source="main.css" />
+	<fx:Style source="main.css"/>
 	
 	<fx:Script>
 		<![CDATA[
@@ -26,7 +25,6 @@
 			protected function onDeactivateApp(event:Event):void
 			{
 				NativeApplication.nativeApplication.exit();
-				
 			}
 			
 			private function getFonts():void
@@ -39,8 +37,6 @@
 					trace(key.fontName + " - " + key.fontStyle + " - " + key.fontType);
 				}
 			}
-			
-			
 			
 		]]>
 	</fx:Script>
