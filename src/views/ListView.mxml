@@ -13,19 +13,21 @@
 			
 			[Bindable]
 			protected var kids:ArrayCollection = new ArrayCollection();
-			protected var kidsService:Kids = new Kids();
+			protected var kidsService:Kids = null;
 			protected var dataToPush:Object = new Object();
 			
 			
 			protected function init(event:FlexEvent):void
 			{
+				var tmp:Object = data;
+				kidsService = data.kidsService;
 				
 				dataToPush.kidsService = kidsService;
 				dataToPush.position = -1;
 				dataToPush.kid = new Object();
 				dataToPush.kid.name = "New Kid";
 				
-				kids = kidsService.list;
+				kids = tmp.kidsService.list;
 				
 				if (kids.length == 0){
 					
@@ -94,6 +96,14 @@
 					
 					<fx:Script>
 						<![CDATA[
+							import flash.utils.clearInterval;
+							
+							import spark.components.supportClasses.StyleableTextField;
+							
+							protected var i:int = 0;
+							protected var blinkCount:int = 8;
+							protected var interval:uint =0;
+							protected var timer:Timer = null;
 							
 							private function styleText():void{
 								labelDisplay.setStyle("fontSize", 50);
@@ -101,10 +111,47 @@
 								messageDisplay.setStyle("color", 0x61656A);
 							}
 							
-							private function secondsToTimer(ob:Object):String{
+							private function secondsToTimer(ob:Kid):String{
 								styleText();
-								var min:int = Math.floor(ob.timeout/60); 
-								var sec:int = ob.timeout % 60;
+								
+								ob.timer.addEventListener(TimerEvent.TIMER, timerProcess );
+								ob.timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerEnd);
+								
+								return ob.clockReadout;
+							}
+							
+							protected function timerProcess(event:TimerEvent):void
+							{
+								timer = event.currentTarget as Timer;
+								messageDisplay.text = getClockReadout(timer.repeatCount - timer.currentCount);
+								
+							}
+							
+							protected function timerEnd(event:TimerEvent):void
+							{
+								timer = event.currentTarget as Timer;
+								timer.reset();
+								interval = setInterval(blink,500,messageDisplay);
+								messageDisplay.textColor = 0xFF0000;
+							}
+							
+							protected function blink(dyn_txt:StyleableTextField):void
+							{
+								if (i < blinkCount){
+									dyn_txt.visible=!dyn_txt.visible;
+									i++;
+								}
+								else{
+									clearInterval(interval);
+									dyn_txt.textColor = 0x61656A;
+									dyn_txt.text = getClockReadout(timer.repeatCount - timer.currentCount);
+								}
+							}
+							
+							public function getClockReadout(timeoutLeft:int):String{
+								var timeleft:int = timeoutLeft;
+								var min:int = Math.floor(timeleft/60); 
+								var sec:int = timeleft % 60;
 								
 								var minutes:String = min.toString();
 								var seconds:String = sec.toString();
@@ -112,11 +159,10 @@
 								if (seconds.length == 1){
 									seconds = "0" + seconds;
 								}
-								
-								var result:String = minutes + ":" + seconds;
-								
-								return result;
+								return minutes + ":" + seconds;
 							}
+							
+							
 							
 						]]>
 					</fx:Script>

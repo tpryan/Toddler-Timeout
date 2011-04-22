@@ -9,22 +9,17 @@
 			import flash.events.KeyboardEvent;
 			import flash.utils.Timer;
 			
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
 			import mx.collections.ArrayCollection;
 			import mx.effects.easing.*;
 			import mx.events.FlexEvent;
 			import mx.events.ResizeEvent;
 			
-			[Bindable]
-			protected var minutes:String = "";
-			
-			[Bindable]
-			protected var seconds:String = "";
 
 			[Bindable]
-			protected var clockChartData:ArrayCollection = new ArrayCollection();
+			protected var clockChartData:ArrayCollection = null;
 			
-			protected var timer:Timer = new Timer(1,1);
-			protected var timeOutLength:int = 0;
 			protected var snd:Sound = null;
 			
 			private var isPlaying:Boolean = false;
@@ -41,18 +36,28 @@
 			{
 				clockChartData = 
 					new ArrayCollection( [
-						{name: "completed", value: 0 },
-						{name: "uncomplete", value:  data.kid.timeout }
+						{name: "completed", value: data.kid.timeout - data.kid.timeoutLeft  },
+						{name: "uncomplete", value:  data.kid.timeoutLeft }
 					]);
 				
 				this.addEventListener(ResizeEvent.RESIZE, onResizeView);
 				
-				setClockReadoutFromSeconds(data.kid.timeout);
-				countDownText.text = minutes + ":" + seconds;
+				countDownText.text = data.kid.clockReadout;
 				
-				timeOutLength = data.kid.timeout;
-				timer.repeatCount = timeOutLength;
-				timer.delay = 1000;
+				
+				data.kid.timer.removeEventListener(TimerEvent.TIMER, timerProcess);
+				data.kid.timer.removeEventListener(TimerEvent.TIMER_COMPLETE, timerEnd);
+				
+				
+				if (data.kid.timer.running == true){
+					trace("Timer still going");
+					timerProcess(null);
+					timerButton.setStyle("icon", Restart);
+					
+					data.kid.timer.addEventListener(TimerEvent.TIMER, timerProcess);
+					data.kid.timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerEnd);
+					
+				}
 				
 			}
 			
@@ -74,22 +79,10 @@
 			
 			protected function onDeactivate():void
 			{
-				timer.stop();
+				//timer.stop();
 			}
 			
 			
-			private function setClockReadoutFromSeconds(allSeconds:int):void{
-				var min:int = Math.floor(allSeconds/60); 
-				var sec:int = allSeconds % 60;
-				
-				minutes = min.toString();
-				seconds = sec.toString();
-				
-				if (seconds.length == 1){
-					seconds = "0" + seconds;
-				}
-				
-			}
 			
 			
 			protected function timerButton_clickHandler(event:Event):void
@@ -97,16 +90,17 @@
 				
 				if (data.kid.timeout > 0){
 				
-					if (timer.running == false){
-						timer.start();
-						timer.addEventListener(TimerEvent.TIMER, timerProcess);
-						timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerEnd);
+					if (data.kid.timer.running == false){
+						data.kid.timer.start();
+						data.kid.timer.addEventListener(TimerEvent.TIMER, timerProcess);
+						data.kid.timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerEnd);
 						timerButton.setStyle("icon", Restart);
 						timerProcess(null);
+						NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.KEEP_AWAKE;
 					}
 					else{
-						timer.reset();
-						timer.start();
+						data.kid.timer.reset();
+						data.kid.timer.start();
 						timerProcess(null);
 						if (isPlaying){
 							snd.close();
@@ -122,18 +116,18 @@
 			
 			protected function timerProcess(event:TimerEvent):void
 			{
-				var timeLeft:int = timeOutLength - timer.currentCount;
 				
 				clockChartData = 
 					new ArrayCollection( [
-						{name: "completed", value: timer.currentCount },
-						{name: "uncomplete", value:  timeLeft }
+						{name: "completed", value: data.kid.timer.currentCount },
+						{name: "uncomplete", value:  data.kid.timeoutLeft }
 						
 					]);
 				
-				setClockReadoutFromSeconds(timeLeft);
-				countDownText.text = minutes + ":" + seconds;
+				
+				countDownText.text = data.kid.clockReadout;
 				radialStroke.alpha = 1;
+				trace("tick: " + data.kid.timeoutLeft);
 			}
 			
 			
@@ -141,12 +135,13 @@
 			{
 				timerButton.setStyle("icon", Reload);
 				countDownText.text = "Hug it out!";
-				timer = new Timer(1000,timeOutLength);
+				data.kid.timer.reset();
 				snd = new Sound( new URLRequest("assets/alarm.wav") );
 				snd.play(0,2);
 				snd.addEventListener(Event.COMPLETE, stopSound);
 				isPlaying = true;
 				radialStroke.alpha = 0;
+				NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.NORMAL;
 			}
 			
 			
@@ -170,6 +165,7 @@
 					clock.height = stage.stageWidth - 20;
 				}
 			}
+			
 			
 			
 		]]>
@@ -196,7 +192,7 @@
 				 left.landscape="10" top.landscape="10" bottom.landscape="100"
 				 horizontalCenter.portrait="0">
 		<mx:series>
-			<mx:PieSeries dataProvider="{clockChartData}" field="value" filters="[]">
+			<mx:PieSeries id="clockChart" dataProvider="{clockChartData}" field="value" filters="[]" >
 				<mx:fills>
 					<s:SolidColor color="0xDDDDDD"/>
 					<s:SolidColor color="0xF8F7CE"/>

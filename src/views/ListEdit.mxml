@@ -17,8 +17,8 @@
 			
 			protected function init(event:FlexEvent):void
 			{
-				
-				if (data.kidService != null){
+				var tmp:Object = data;
+				if (data.kidsService != null){
 					kidsService = data.kidsService;
 				}
 				else{
@@ -27,7 +27,7 @@
 				
 				kids = kidsService.list;
 				
-				dataToPush.kidService = kidsService;
+				dataToPush.kidsService = kidsService;
 			}
 			
 			protected function kidList_clickHandler(event:MouseEvent):void
@@ -51,7 +51,7 @@
 				var dataToPush:Object = new Object();
 				dataToPush.kidsService = kidsService;
 				dataToPush.position = -1;
-				dataToPush.kid = new Object();
+				dataToPush.kid = new Kid();
 				dataToPush.kid.name = "New Kid";
 				navigator.pushView(ChildEdit,dataToPush);
 				

@@ -8,7 +8,7 @@
 			
 			[Bindable]
 			protected var kid:Object = new Object;
-			protected var kidService:Kids = new Kids();
+			protected var kidsService:Kids = null;
 			protected var position:Number = -1;
 			
 			protected function backButton_clickHandler(event:MouseEvent):void
@@ -20,6 +20,15 @@
 			{
 				kid = data.kid;
 				position = data.position;
+				
+				
+				if (data.kidsService != null){
+					kidsService = data.kidsService;
+				}
+				else{
+					kidsService = new Kids();
+				}
+				
 				var minutes:int = Math.floor(kid.timeout/60); 
 				var seconds:int = kid.timeout % 60;
 				
@@ -53,7 +62,7 @@
 			protected function deleteButton_clickHandler(event:MouseEvent):void
 			{
 				if (position > -1){	
-					kidService.destroy(position);
+					kidsService.destroy(position);
 				}
 				navigator.popView();
 				
@@ -73,7 +82,7 @@
 				trace(kid.timeout);
 				
 				
-				kidService.save(kid,position);
+				kidsService.save(kid,position);
 				navigator.popView();
 				
 			}

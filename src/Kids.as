@@ -1,5 +1,7 @@
 package
 {
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
@@ -10,8 +12,10 @@ package
 	import mx.rpc.xml.SimpleXMLDecoder;
 	import mx.rpc.xml.SimpleXMLEncoder;
 	import mx.utils.ArrayUtil;
+	
+	[Event(name="result", type="flash.events.Event")]
 
-	public class Kids
+	public class Kids extends EventDispatcher
 	{
 		
 		private var _list:ArrayCollection = new ArrayCollection();
@@ -19,6 +23,10 @@ package
 		
 		
 		public function Kids(){
+			
+		}
+		
+		public function initList():void{
 			read();
 		}
 		
@@ -95,8 +103,10 @@ package
 				fileStream.open(file, FileMode.READ);
 				var kidsXML:XML = XML(fileStream.readUTFBytes(fileStream.bytesAvailable));
 				var temp:ArrayCollection = convertXmlToArrayCollection(kidsXML);
-				_list = temp;				
+				_list = convertACtoACofKid(temp);				
 			}
+			onResultComplete();
+			
 		}
 		
 		private function convertXmlToArrayCollection( file:String ):ArrayCollection
@@ -113,7 +123,22 @@ package
 			}
 			return new ArrayCollection( array );
 		}
-
 		
+		private function convertACtoACofKid(ac:ArrayCollection):ArrayCollection{
+			var result:ArrayCollection = new ArrayCollection();
+			
+			for (var i:int = 0; i < ac.length; i++){
+				var tmp:Kid = new Kid();
+				tmp.name = ac[i].name;
+				tmp.timeout = ac[i].timeout;
+				result.addItemAt(tmp,i); 
+			}
+			return result;
+		}
+
+		public function onResultComplete():void {
+			trace("dispatching event..");
+			dispatchEvent(new Event("result",true));
+		}
 	}
 }

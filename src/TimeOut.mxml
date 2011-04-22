@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
 							xmlns:s="library://ns.adobe.com/flex/spark"
-							creationComplete="init(event)" firstView="views.ListView"
+							creationComplete="init(event)" 
 							splashScreenImage="@Embed('assets/splashScreen.png')"
 							splashScreenScaleMode="none">
 	
@@ -12,14 +12,25 @@
 			import com.terrenceryan.fonts.ComicSerif;
 			import com.terrenceryan.fonts.ComicSerifTLF;
 			
+			import mx.collections.ArrayCollection;
+			import mx.events.CollectionEvent;
 			import mx.events.FlexEvent;
 			
 			import spark.transitions.FlipViewTransition;
 			
+			import views.ListView;
+			
+			protected var kids:ArrayCollection = new ArrayCollection();
+			protected var kidsService:Kids = new Kids();
+			protected var dataToPush:Object = new Object();
+			
 			protected function init(event:FlexEvent):void
 			{
-				NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, onDeactivateApp);
+				//TODO: Remove code if it needs to be removed.
+				//NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, onDeactivateApp);
 				getFonts();
+				kidsService.addEventListener("result", onResult);
+				kidsService.initList();
 			}
 			
 			protected function onDeactivateApp(event:Event):void
@@ -36,6 +47,12 @@
 				{
 					trace(key.fontName + " - " + key.fontStyle + " - " + key.fontType);
 				}
+			}
+			
+			protected function onResult(event:Event):void
+			{
+				dataToPush.kidsService = kidsService;
+				navigator.pushView(views.ListView, dataToPush);
 			}
 			
 		]]>
