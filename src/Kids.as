@@ -42,7 +42,7 @@ package
 		}
 		
 		
-		public function save(obj:Object, position:int=-1):void{
+		public function save(obj:Kid, position:int=-1):void{
 			if (position == -1){
 				_list.addItem(obj);	
 			}

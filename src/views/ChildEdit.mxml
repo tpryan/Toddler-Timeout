@@ -7,7 +7,7 @@
 			import mx.events.FlexEvent;
 			
 			[Bindable]
-			protected var kid:Object = new Object;
+			protected var kid:Kid = new Kid;
 			protected var kidsService:Kids = null;
 			protected var position:Number = -1;
 			

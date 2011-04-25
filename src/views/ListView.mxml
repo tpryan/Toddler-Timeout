@@ -24,10 +24,14 @@
 				
 				dataToPush.kidsService = kidsService;
 				dataToPush.position = -1;
-				dataToPush.kid = new Object();
+				dataToPush.kid = new Kid;
 				dataToPush.kid.name = "New Kid";
 				
 				kids = tmp.kidsService.list;
+				
+				if (kids.length == 0){
+					kidsService.initList();
+				}
 				
 				if (kids.length == 0){
 					
