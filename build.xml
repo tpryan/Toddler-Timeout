@@ -270,6 +270,10 @@
 			<compiler.library-path dir="${FLEX_HOME}/frameworks" append="true">
                 <include name="libs/*" />
             </compiler.library-path>
+			
+			<compiler.library-path dir="libs" append="true">
+                <include name="*" />
+            </compiler.library-path>
 		</mxmlc>
 		
     </target>
@@ -281,6 +285,8 @@
 		<copy file="${bb.swf}" todir="${bb.collect}"  />
 		<echo message="Copying Application Description File for BlackBerry"/>
 		<copy file="${dev.dir}/${app.name}-app.bb.xml" todir="${bb.collect}" preservelastmodified="true" />
+		<echo message="Copying BlackBerry Description File for BlackBerry"/>
+		<copy file="${dev.dir}/blackberry-tablet.xml" todir="${bb.collect}" preservelastmodified="true" />
 		<echo message="Modifying Application Description File"/>
 		<replace file="${bb.collect}/${app.name}-app.bb.xml">
 			<replacefilter token="${contentText}" value="${app.name}.swf" />
@@ -302,6 +308,7 @@
 			<arg value="${app.name}-app.bb.xml"/>
 			<arg value="${app.name}.swf"/>
 			<arg value="assets"/>
+			<arg value="blackberry-tablet.xml"/>
 		</exec>
 		
 		<echo message="Copying BlackBerry App to App Folder"/>
@@ -325,7 +332,7 @@
 		</exec>
 	</target>
 	
-	<target name="blackberry.install">
+	<target name="blackberry.install" depends="blackberry.compile,blackberry.collect">
 		<echo message="Installing onto Blackberry VM"/>
 		<exec executable="${bb.packager}" dir="${build.dir}/blackberry">
 			<arg value="-package"/>
