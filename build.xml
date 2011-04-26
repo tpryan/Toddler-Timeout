@@ -69,7 +69,7 @@
 		<echo message="Creating Device Folder"/>
 		<mkdir dir="${device.build}"/>
 		<echo message="Compiling swf for devices"/>
-		<mxmlc file="${projectFile}" output="${device.swf}"> 
+		<mxmlc file="${projectFile}" output="${device.swf}" debug="false"> 
 	        <load-config filename="${FLEX_HOME}/frameworks/airmobile-config.xml"/> 
 	        <source-path path-element="${FLEX_HOME}/frameworks"/>
 			<static-link-runtime-shared-libraries />

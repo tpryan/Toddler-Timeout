@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+
 <qnx>
-	<action>access_shared</action>
-    <action>play_audio</action>
+   <action>access_shared</action>
+   <action>play_audio</action>
 </qnx>
