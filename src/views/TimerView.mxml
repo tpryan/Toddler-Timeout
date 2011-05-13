@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
-		xmlns:s="library://ns.adobe.com/flex/spark"
-		xmlns:mx="library://ns.adobe.com/flex/mx"
-		cacheAsBitmap="true" creationComplete="init(event)" title="Time Out!"
-		viewDeactivate="onDeactivate()">
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" resize="view1_resizeHandler(event)"
+		xmlns:components="components.*"
+		actionBarVisible="false" cacheAsBitmap="true" creationComplete="init(event)"
+		title="Time Out!" viewDeactivate="onDeactivate()" >
 	<fx:Script>
 		<![CDATA[
 			import flash.events.KeyboardEvent;
@@ -16,11 +17,18 @@
 			import mx.events.FlexEvent;
 			import mx.events.ResizeEvent;
 			
+			import spark.effects.Resize;
+			import spark.events.ViewNavigatorEvent;
+			import spark.filters.GlowFilter;
+			
 
 			[Bindable]
 			protected var clockChartData:ArrayCollection = null;
 			
-			protected var snd:Sound = null;
+			protected var snd:Sound = new Sound( new URLRequest("assets/alarm.wav") );
+			protected var sndChannel:SoundChannel = null;
+			protected var trans:SoundTransform = new SoundTransform(0.6, -1);
+			protected var dataToPush:Object = null;
 			
 			private var isPlaying:Boolean = false;
 			
@@ -31,9 +39,13 @@
 			[Embed(source='/assets/rewindtostart.png')]
 			private static var Restart:Class;
 			
+			private const DEFAULT_FONT_SIZE:int = 80;
 			
 			protected function init(event:FlexEvent):void
 			{
+				dataToPush = data;
+				
+				
 				clockChartData = 
 					new ArrayCollection( [
 						{name: "completed", value: data.kid.timeout - data.kid.timeoutLeft  },
@@ -45,6 +57,7 @@
 				countDownText.text = data.kid.clockReadout;
 				
 				
+				
 				data.kid.timer.removeEventListener(TimerEvent.TIMER, timerProcess);
 				data.kid.timer.removeEventListener(TimerEvent.TIMER_COMPLETE, timerEnd);
 				
@@ -52,12 +65,14 @@
 				if (data.kid.timer.running == true){
 					trace("Timer still going");
 					timerProcess(null);
-					timerButton.setStyle("icon", Restart);
+					clockControls.switchPlayToReload();
+					clockControls.cancelVisible = true;
 					
 					data.kid.timer.addEventListener(TimerEvent.TIMER, timerProcess);
 					data.kid.timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerEnd);
 					
 				}
+				
 				
 			}
 			
@@ -89,12 +104,13 @@
 			{
 				
 				if (data.kid.timeout > 0){
-				
+					clockControls.cancelVisible = true;
+					countDownText.setStyle("fontSize", DEFAULT_FONT_SIZE);
 					if (data.kid.timer.running == false){
 						data.kid.timer.start();
 						data.kid.timer.addEventListener(TimerEvent.TIMER, timerProcess);
 						data.kid.timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerEnd);
-						timerButton.setStyle("icon", Restart);
+						clockControls.switchPlayToReload();
 						timerProcess(null);
 						NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.KEEP_AWAKE;
 					}
@@ -133,15 +149,29 @@
 			
 			protected function timerEnd(event:TimerEvent):void
 			{
-				timerButton.setStyle("icon", Reload);
+				clockControls.switchPlayToReload();
 				countDownText.text = "Hug it out!";
+				countDownText.setStyle("fontSize", 45);
 				data.kid.timer.reset();
-				snd = new Sound( new URLRequest("assets/alarm.wav") );
-				snd.play(0,2);
-				snd.addEventListener(Event.COMPLETE, stopSound);
-				isPlaying = true;
+				
+				soundAlarm();
+				clockControls.cancelVisible = false;
 				radialStroke.alpha = 0;
 				NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.NORMAL;
+			}
+			
+			protected function soundAlarm():void{
+				if (snd != null){
+					sndChannel = snd.play(0,2, trans);
+					
+					if (clockControls.muteState == "deactivated"){
+						trans.volume = 0;
+						sndChannel.soundTransform = trans;
+					}
+					
+					snd.addEventListener(Event.COMPLETE, stopSound);
+					isPlaying = true;
+				}
 			}
 			
 			
@@ -153,19 +183,75 @@
 			protected function stopSound(event:Event):void
 			{
 				isPlaying = false;
+				trans.volume = 0;
+				sndChannel.soundTransform = trans;
+			}
+			
+			protected function restartSound(event:Event):void
+			{
+				trans.volume = 1;
+				sndChannel.soundTransform = trans;
 			}
 			
 			protected function setChartSize(e:Event):void{
 				if(currentState == "landscape"){
-					clock.width = stage.stageHeight - 180;
-					clock.height = stage.stageHeight - 180;
+					clock.width = stage.stageHeight - 2;
+					clock.height = stage.stageHeight - 2;
 				}
 				else{
-					clock.width = stage.stageWidth - 20;
-					clock.height = stage.stageWidth - 20;
+					clock.width = stage.stageWidth - 2;
+					clock.height = stage.stageWidth - 2;
 				}
 			}
 			
+			
+			
+			
+			protected function mute_toggledHandler(event:Event):void
+			{
+				
+				if (sndChannel != null && sndChannel.position != 0){
+					if (clockControls.muteState == "deactivated"){
+						stopSound(null);
+					}
+					else{
+						restartSound(null);	
+					}
+				}
+				
+			}
+			
+			protected function cancel_clickHandler(event:Event):void
+			{
+				data.kid.timer.stop();
+				data.kid.cancelTimer();
+				navigator.popView();
+				
+			}
+			
+			
+			protected function view1_resizeHandler(event:ResizeEvent):void
+			{
+				//background.height = stage.stageHeight;
+				//background.width = stage.stageWidth;
+				//backgroundGrad.rotation = 0;
+				
+			}
+			
+			protected function keyPress(event:KeyboardEvent):void
+			{
+				trace(event.keyCode);
+				
+				if (event.keyCode == Keyboard.MENU){
+					
+					navigator.pushView(views.ChildEdit,dataToPush);
+				}
+			}
+			
+			protected function clock_creationCompleteHandler(event:FlexEvent):void
+			{
+				
+			}
 			
 			
 		]]>
@@ -174,25 +260,25 @@
 		<s:State name="portrait"/>
 		<s:State name="landscape"/>
 	</s:states>
+	
 	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<fx:Array id="filterArray">
+			<s:GlowFilter id="glow" blurX="8" blurY="8" color="#FFFFFF" quality="2" strength="1" />
+		</fx:Array>
 	</fx:Declarations>
 	
 	<s:navigationContent>
-		<s:Button id="backButton" click="backButton_clickHandler(event)"
-				  icon="@Embed('/assets/arrowleft.png')"/>
+		<s:Button id="backButton" click="backButton_clickHandler(event)" icon="@Embed('/assets/arrowleft.png')"/>
 	</s:navigationContent>
 	
+	<s:Image id="background" source="@Embed('/assets/backgroundStartBurst.png')" verticalCenter="0" horizontalCenter="0" width="2000" height="2000" />
 	
 	
-	
-	<mx:PieChart id="clock" top="10" render="setChartSize(event)" resize="setChartSize(event)"
-				 rotation="-90"
-				 click="timerButton_clickHandler(event)"
-				 left.landscape="10" top.landscape="10" bottom.landscape="100"
-				 horizontalCenter.portrait="0">
+	<mx:PieChart id="clock" top="2" click="timerButton_clickHandler(event)" horizontalCenter="0" 
+				 render="setChartSize(event)" resize="setChartSize(event)" rotation="-90" creationComplete="clock_creationCompleteHandler(event)"
+				 verticalCenter="0">
 		<mx:series>
-			<mx:PieSeries id="clockChart" dataProvider="{clockChartData}" field="value" filters="[]" >
+			<mx:PieSeries id="clockChart" dataProvider="{clockChartData}" field="value" filters="[]">
 				<mx:fills>
 					<s:SolidColor color="0xDDDDDD"/>
 					<s:SolidColor color="0xF8F7CE"/>
@@ -210,15 +296,24 @@
 		</mx:series>
 	</mx:PieChart>
 	
+	<s:Label id="kidName" text="{data.kid.name}" fontSize="{DEFAULT_FONT_SIZE}"
+			 filters="{filterArray}"
+			 horizontalCenter.portrait="0" left.landscape="10" 
+			 verticalCenter.portrait="{-(clock.height/2 + 20)}"
+			 top.landscape="10"
+			 />
 	
-	<s:Button id="timerButton" left="10" right="10" bottom="10"
-			  click="timerButton_clickHandler(event)" icon="@Embed('//assets/play.png')"
-			  iconPlacement="right"/>
-	<s:Label id="countDownText" fontSize="80" textAlign="center"
-			 click="timerButton_clickHandler(event)"
-			 left.landscape="{clock.x + clock.width+ 10}" right.landscape="10"
-			 textAlign.landscape="left" verticalCenter.landscape="-35"
-			 left.portrait="20" right.portrait="20"
-			 top.portrait="{(clock.height/2)-(countDownText.height/2)}"
-			 horizontalCenter.portrait="0"/>
+	<s:Label id="countDownText" click="timerButton_clickHandler(event)"
+			 filters="{filterArray}"
+			 fontSize="{DEFAULT_FONT_SIZE}" horizontalCenter="0" textAlign="center"
+			 verticalCenter="{-countDownText.height/4 - 5}"/>
+	
+	
+	<components:ClockControls id="clockControls" cancel="cancel_clickHandler(event)"
+							  componentHeight="{clock.height/7}"
+							  componentWidth="{clock.width/2}" 
+							  horizontalCenter="0"
+							  muteToggled="mute_toggledHandler(event)"
+							  playClicked="timerButton_clickHandler(event)"
+							  verticalCenter="{clock.height/6}"/>
 </s:View>

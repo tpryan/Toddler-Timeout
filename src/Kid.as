@@ -51,6 +51,16 @@ package
 			_timer.delay = 1000;
 		}
 		
+		public function cancelTimer():void
+		{
+			_timer = null;
+			_timer = new Timer(1,1);
+			_timer.stop();
+			_timer.repeatCount = _timeout;
+			_timer.delay = 1000;
+			
+		}
+		
 		
 		public function get clockReadout():String{
 			var timeleft:int = timeoutLeft;

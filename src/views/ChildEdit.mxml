@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" title="{data.kid.name}" creationComplete="init(event)">
+		xmlns:s="library://ns.adobe.com/flex/spark" keyDown="keyPress(event)" 
+		xmlns:components="components.*" actionBarVisible="false"
+		title="{data.kid.name}" creationComplete="init(event)" >
+		
 	
 	<fx:Script>
 		<![CDATA[
+			import components.DeleteButton;
+			
 			import mx.events.FlexEvent;
+			
+			import spark.transitions.SlideViewTransition;
 			
 			[Bindable]
 			protected var kid:Kid = new Kid;
@@ -32,32 +39,22 @@
 				var minutes:int = Math.floor(kid.timeout/60); 
 				var seconds:int = kid.timeout % 60;
 				
-				timeoutMinutesField.text = minutes.toString();
-				timeoutSecondsField.text = seconds.toString();
+				minutesPicker.value = minutes;
+				secondsPicker.value = seconds;
 				
 				if (kid.name == "New Kid"){
 					nameField.setStyle("color",0xAAAAAA);
 					nameField.addEventListener(FocusEvent.FOCUS_IN, fieldReset);
 					
-					timeoutMinutesField.text = "mm";
-					timeoutMinutesField.setStyle("color",0xAAAAAA);
-					timeoutMinutesField.addEventListener(FocusEvent.FOCUS_IN, fieldReset);
-					timeoutSecondsField.text = "ss";
-					timeoutSecondsField.setStyle("color",0xAAAAAA);
-					timeoutSecondsField.addEventListener(FocusEvent.FOCUS_IN, fieldReset);
 				}
 				
-				displaySeconds();
-				
+				var trans:SlideViewTransition = new SlideViewTransition();
+				trans.direction = "right";
+				navigator.defaultPopTransition = trans;
 				
 				
 			}
 			
-			protected function displaySeconds():void{
-				if (timeoutSecondsField.text.length == 1){
-					timeoutSecondsField.text = "0" + timeoutSecondsField.text;
-				}
-			}
 			
 			protected function deleteButton_clickHandler(event:MouseEvent):void
 			{
@@ -71,14 +68,12 @@
 			protected function saveButton_clickHandler(event:MouseEvent):void
 			{
 				trace(kid.timeout);
-				var minutesAsSeconds:int = parseInt(timeoutMinutesField.text)* 60;
-				var seconds:int = parseInt(timeoutSecondsField.text);
+				var minutesAsSeconds:int = minutesPicker.value * 60;
+				var seconds:int = secondsPicker.value;
 				seconds = seconds + minutesAsSeconds;
 					
 				kid.timeout = seconds;
 				kid.name = nameField.text;
-				trace("timeoutMinutesField.text: " + timeoutMinutesField.text);
-				trace("timeoutSecondsField.text: " + timeoutSecondsField.text);
 				trace(kid.timeout);
 				
 				
@@ -94,6 +89,15 @@
 				event.currentTarget.removeEventListener(FocusEvent.FOCUS_IN, fieldReset);
 				event.currentTarget.text = "";
 				
+			}
+			
+			protected function keyPress(event:KeyboardEvent):void
+			{
+				trace(event.keyCode);
+				
+				if (event.keyCode == Keyboard.MENU){
+					deleteMenu.visible = true;
+				}
 			}
 			
 			
@@ -114,31 +118,46 @@
 		<s:Button id="deleteButton" click="deleteButton_clickHandler(event)"  icon="@Embed('/assets/delete.png')"  />
 	</s:actionContent>
 	
-	<s:Group top="10" left="10" right="10">
+	<s:Image source="@Embed('/assets/backgroundStartBurst.png')" verticalCenter="0" horizontalCenter="0" width="2000" height="2000" />
+	
+	<s:Rect top="10" left="10" right="10" bottom="10">
+		<s:fill>
+			<s:SolidColor color="0xFFFFFF" />
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0xCCCCCC" />
+		</s:stroke>
+	</s:Rect>
+	
+	<s:Group top="15" left="15" right="15" bottom="15">
 		<s:layout>
-			<s:FormLayout paddingBottom="20" />
+			<s:FormLayout paddingBottom="10" horizontalAlign="center" />
 		</s:layout>
 		
 		<s:Label id="nameLabel"  text="Name:"/>
-		<s:TextInput id="nameField" text="{kid.name}" width="100%"    textAlign="left"/>
+		<s:TextInput id="nameField" text="{kid.name}" width="100%"    textAlign="center"/>
 		<s:Label text="How Long?"/>
 		
-		<s:Group>
+		<s:Group id="pickers" width="100%">
 			<s:layout>
-				<s:HorizontalLayout />
+				<s:HorizontalLayout horizontalAlign="center" verticalAlign="middle" />
 			</s:layout>
-			<s:TextInput id="timeoutMinutesField"  textAlign="right" width="80" />
-			<s:Label  text=":"/>
-			<s:TextInput id="timeoutSecondsField"  textAlign="right" width="80" focusOut="displaySeconds()" />
+			
+			<components:NumberPicker id="minutesPicker" to="10" verticalCenter="{-(minutesPicker.width + 10)}" />
+			<s:Label text=":" verticalCenter="0"/>
+			<components:NumberPicker id="secondsPicker" to="45" interval="15" padNumber="true" verticalCenter="10" />
 		</s:Group>
 		
 		
 		
-		<s:Button id="saveButton" width="100%" click="saveButton_clickHandler(event)"
+		<s:Button id="saveButton" width="180" horizontalCenter="0" click="saveButton_clickHandler(event)"
 				  icon="@Embed('/assets/disk.png')" iconPlacement="right"/>
+		
+		
+		
 	</s:Group>
 	
-	
+	<components:DeleteButton id="deleteMenu" left="0" right="0" bottom="0" visible="false" click="deleteButton_clickHandler(event)" />
 	
 	
 </s:View>

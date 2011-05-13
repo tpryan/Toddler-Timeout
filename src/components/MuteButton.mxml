@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" click="clickHandler()" mouseDown="down(event)" mouseUp="up(event)" >
+	
+	<fx:Metadata>
+		[Event(name="toggled", type="flash.events.Event")]
+	</fx:Metadata>
+	
+	<fx:Script>
+		
+		<![CDATA[
+			private var _state:String = "active";
+			
+			[Bindable]
+			protected var itemAlpha:Number = .5; 
+			
+			public function get state():String
+			{
+				return _state;
+			}
+
+
+			protected function clickHandler():void
+			{
+				toggleState();
+				
+				dispatchEvent(new Event("toggled"));
+				
+			}
+			
+			private function toggleState():void
+			{
+				if (state == "active"){
+					_state = "deactivated";
+					icon.alpha = .2;
+					icon.source = "assets/volume_off.png";
+					
+				}
+				else{
+					_state = "active";
+					icon.alpha = itemAlpha;
+					icon.source = "assets/volume_on.png";
+				}
+				
+			}
+			
+			protected function down(event:MouseEvent):void
+			{
+				icon.x=3;
+				icon.y=3;
+				icon.alpha=1;
+				
+			}
+			
+			protected function up(event:MouseEvent):void
+			{
+				icon.x=0;
+				icon.y=0;
+				icon.alpha=itemAlpha;
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Image id="icon" x="0" y="0" source="assets/volume_on.png" alpha="{itemAlpha}"/>
+</s:Group>

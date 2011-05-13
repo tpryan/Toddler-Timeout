@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" cacheAsBitmap="true" 
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" cacheAsBitmap="true" actionBarVisible="false" 
 		xmlns:s="library://ns.adobe.com/flex/spark" title="Who's in Trouble?" keyDown="keyPress(event)" creationComplete="init(event)">
 	
 	<fx:Script>
@@ -34,12 +34,12 @@
 				}
 				
 				if (kids.length == 0){
-					
-					var trans:FlipViewTransition = new FlipViewTransition();
-					trans.direction = "up";
-					
 					navigator.pushView(ChildEdit,dataToPush);
 				}
+				
+				var trans:SlideViewTransition = new SlideViewTransition();
+				trans.direction = "right";
+				navigator.defaultPopTransition = trans;
 				
 			}
 			
@@ -76,23 +76,28 @@
 				trace(event.keyCode);
 				
 				if (event.keyCode == Keyboard.MENU){
-					
-					var trans:FlipViewTransition = new FlipViewTransition();
-					trans.direction = "up";
-					
-					navigator.pushView(views.ListEdit,dataToPush,null,trans);
+					var trans:SlideViewTransition = new SlideViewTransition();
+					trans.direction = "down";
+					navigator.pushView(views.ListEdit,dataToPush, null, trans);
 				}
 			}
 			
 		]]>
 	</fx:Script>
 	
+	<fx:Declarations>
+		<fx:Array id="filterArray">
+			<s:GlowFilter id="glow" blurX="8" blurY="8" color="#000000" quality="2" strength="1" alpha=".5" />
+		</fx:Array>
+	</fx:Declarations>
+	
 	<s:actionContent>
 		<s:Button id="editButton"  click="editButton_clickHandler(event)" icon="@Embed('/assets/pencilangled.png')"   />
 	</s:actionContent>
 	
+	<s:Image source="@Embed('/assets/backgroundStartBurst.png')" verticalCenter="0" horizontalCenter="0" width="2000" height="2000" />
 	
-	<s:List id="kidList" left="10" right="10" top="10" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)" cacheAsBitmap="true">
+	<s:List id="kidList" left="10" right="10" top="57" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)" cacheAsBitmap="true" borderColor="0xcccccc" borderVisible="true">
 		<s:itemRenderer >
 			<fx:Component>
 				<s:IconItemRenderer creationComplete="styleText()" messageFunction="secondsToTimer" decorator="@Embed('/assets/clock.png')" alternatingItemColors="['0xffffff','0xF8F7CE']" cacheAsBitmap="true">
@@ -167,7 +172,6 @@
 							}
 							
 							
-							
 						]]>
 					</fx:Script>
 					
@@ -176,4 +180,5 @@
 		</s:itemRenderer>
 	
 	</s:List>
+	<s:Label x="10" y="14" color="#F8F7CE" fontSize="32" text="Who's in Trouble?" filters="{filterArray}" />
 </s:View>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" creationComplete="init(event)"
+		xmlns:s="library://ns.adobe.com/flex/spark" title="NumberPicker" backgroundColor="0xffffff">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			
+			//properties
+			private var _from:int = 0;
+			private var _to:int = 0;
+			private var _value:int = 0;
+			private var _interval:int = 1;
+			private var _padNumber:Boolean=false;
+			
+			private var valueArray:Array = new Array();
+			private var selectedIndex:int = 0; 
+			
+			public function get padNumber():Boolean { return _padNumber; }
+			
+			public function set padNumber(value:Boolean):void
+			{
+				if (_padNumber == value)
+					return;
+				_padNumber = value;
+			}
+			
+			public function get from():int { return _from; }
+			
+			public function set from(value:int):void
+			{
+				if (_from == value)
+					return;
+				_from = value;
+			}
+			
+			
+			
+			public function get to():int { return _to; }
+			
+			public function set to(value:int):void
+			{
+				if (_to == value)
+					return;
+				_to = value;
+			}
+			
+			
+			[Bindable]
+			public function get value():int { return _value; }
+			
+			public function set value(value:int):void
+			{
+				if (_value == value)
+					return;
+				_value = value;
+				setDisplay();
+			}
+			
+			public function get interval():int { return _interval; }
+			
+			public function set interval(value:int):void
+			{
+				if (_interval == value)
+					return;
+				_interval = value;
+			}
+			
+			private function setDisplay():void{
+				if ((value.toString().length < 2) && padNumber == true){
+					display.text = "0" + value.toString();
+				}
+				else{
+					display.text = value.toString();
+				}
+			}
+
+			protected function init(event:FlexEvent):void
+			{
+				populateArray();
+				setDisplay();
+				
+			}
+			
+			protected function up_clickHandler(event:MouseEvent):void
+			{
+				
+				if (value < to){
+					value = value + interval;
+				}
+				else{
+					value=from;
+				}
+				
+				
+				setDisplay()
+				
+			}
+			
+			protected function down_clickHandler(event:MouseEvent):void
+			{
+				if (value > from){
+					value = value  - interval;
+				}
+				else{
+					value=to;
+				}
+				setDisplay();
+				
+			}
+			
+			private function resetValue():void{
+				value = valueArray[selectedIndex];
+				setDisplay();
+			}
+			
+			private function populateArray():void
+			{
+				for (var i:int=from; i<to; i=i+interval ){
+					valueArray.push(i);
+				}
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout paddingTop="0" />
+	</s:layout>
+	
+	<s:Button id="up" click="up_clickHandler(event)" label="+" height="80" width="80" fontSize="40" />
+	<s:Label id="display" fontSize="40"  textAlign="center"    width="80" />
+	<s:Button id="down" click="down_clickHandler(event)" label="-"  height="80" width="80" fontSize="40" />
+	
+</s:View>

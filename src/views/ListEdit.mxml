@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" title="Edit List" creationComplete="init(event)">
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" actionBarVisible="false" keyDown="keyPress(event)"
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Edit List" creationComplete="init(event)" xmlns:components="components.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -9,6 +9,7 @@
 			
 			import spark.transitions.FlipViewTransition;
 			import spark.transitions.SlideViewTransition;
+			import spark.transitions.ViewTransitionBase;
 			
 			protected var kidsService:Kids = null;
 			[Bindable]
@@ -28,13 +29,20 @@
 				kids = kidsService.list;
 				
 				dataToPush.kidsService = kidsService;
+
+				var trans:SlideViewTransition = new SlideViewTransition();
+				trans.direction = "up";
+				navigator.defaultPopTransition = trans;
+				
 			}
+			
 			
 			protected function kidList_clickHandler(event:MouseEvent):void
 			{
 				
 				dataToPush.position = kidList.selectedIndex;
 				dataToPush.kid = kidList.selectedItem;
+				kidList.selectedIndex = -1;
 				navigator.pushView(ChildEdit,dataToPush);
 				
 			}
@@ -57,11 +65,22 @@
 				
 			}
 			
+			protected function keyPress(event:KeyboardEvent):void
+			{
+				trace(event.keyCode);
+				
+				if (event.keyCode == Keyboard.MENU){
+					addMenu.visible = true;
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<fx:Array id="filterArray">
+			<s:GlowFilter id="glow" blurX="8" blurY="8" color="#000000" quality="2" strength="1" alpha=".5" />
+		</fx:Array>
 	</fx:Declarations>
 	
 	<s:navigationContent>
@@ -72,7 +91,12 @@
 		<s:Button id="newButton" click="newButton_clickHandler(event)"  icon="@Embed('/assets/plus.png')"  />
 	</s:actionContent>
 	
-	<s:List id="kidList" left="10" right="10" top="10" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)" cacheAsBitmap="true" >
+	<s:Image source="@Embed('/assets/backgroundStartBurst.png')" verticalCenter="0" horizontalCenter="0" width="1500" height="1500" />
+	
+	
+	<s:Label x="10" y="14" color="#F8F7CE" fontSize="32" text="Edit List" filters="{filterArray}" />
+	
+	<s:List id="kidList" left="10" right="10" top="57" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)" cacheAsBitmap="true" borderColor="0xcccccc" borderVisible="true">
 		<s:itemRenderer>
 			<fx:Component>
 				<s:IconItemRenderer  messageFunction="secondsToTimer" decorator="@Embed('/assets/pencilangled.png')" alternatingItemColors="['0xf7f7f7','0xFFFFF3']" cacheAsBitmap="true">
@@ -109,4 +133,8 @@
 			</fx:Component>
 		</s:itemRenderer>
 	</s:List>
+	
+	<components:AddButton id="addMenu" left="0" right="0" bottom="0" visible="false" click="newButton_clickHandler(event)" />
+	
+	
 </s:View>

@@ -12,13 +12,15 @@ s|View{
 
 global
 {
-	font-family: "HVD Comic Serif Pro";
+	font-family: "Eurostile";
+	font-weight: bold;
 	font-size: 35;
 }
 
 s|ActionBar 
 {
 	chrome-color: #EBEAC3;
+	
 	
 	
 }
@@ -58,12 +60,20 @@ s|ActionBar #titleDisplay
 
 
 s|IconItemRenderer {
-	chromeColor: #FF0000;
-	contentBackgroundColor: #FF0000;
-	rollOverColor: #FF0000;
-	focusColor: #FF0000;
-	selectionColor: #FF0000;
+	chromeColor: #A1ABB1;
+	contentBackgroundColor: #A1ABB1;
+	rollOverColor: #A1ABB1;
+	focusColor: #A1ABB1;
+	selectionColor: #A1ABB1;
 	color: #000000;
 	
+}
+
+s|TextInput{
+	fontFamily: serif;
+}
+
+s|Label{
+	fontSize: 30;
 }
 
