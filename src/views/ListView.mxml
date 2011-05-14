@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" cacheAsBitmap="true" actionBarVisible="false" 
-		xmlns:s="library://ns.adobe.com/flex/spark" title="Who's in Trouble?" keyDown="keyPress(event)" creationComplete="init(event)">
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Who's in Trouble?" 
+		keyDown="keyPress(event)" creationComplete="init(event)">
 	
 	<fx:Script>
 		<![CDATA[
@@ -19,10 +20,16 @@
 			
 			protected function init(event:FlexEvent):void
 			{
+				
+				if (data.os == "iPhone3,1"){
+					activateSoftControls();
+				}
+				
 				var tmp:Object = data;
 				kidsService = data.kidsService;
 				
-				dataToPush.kidsService = kidsService;
+				dataToPush = data;
+				
 				dataToPush.position = -1;
 				dataToPush.kid = new Kid;
 				dataToPush.kid.name = "New Kid";
@@ -41,6 +48,15 @@
 				trans.direction = "right";
 				navigator.defaultPopTransition = trans;
 				
+				
+				
+				
+			}
+			
+			protected function activateSoftControls():void{
+				this.actionBarVisible = true;
+				removeElement(titleLabel);
+				kidList.top = 10;
 			}
 			
 			
@@ -87,7 +103,7 @@
 	
 	<fx:Declarations>
 		<fx:Array id="filterArray">
-			<s:GlowFilter id="glow" blurX="8" blurY="8" color="#000000" quality="2" strength="1" alpha=".5" />
+			<s:GlowFilter id="glow" blurX="8" blurY="8" color="#000000" quality="2" strength="1" alpha=".7" />
 		</fx:Array>
 	</fx:Declarations>
 	
@@ -95,7 +111,6 @@
 		<s:Button id="editButton"  click="editButton_clickHandler(event)" icon="@Embed('/assets/pencilangled.png')"   />
 	</s:actionContent>
 	
-	<s:Image source="@Embed('/assets/backgroundStartBurst.png')" verticalCenter="0" horizontalCenter="0" width="2000" height="2000" />
 	
 	<s:List id="kidList" left="10" right="10" top="57" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)" cacheAsBitmap="true" borderColor="0xcccccc" borderVisible="true">
 		<s:itemRenderer >
@@ -180,5 +195,5 @@
 		</s:itemRenderer>
 	
 	</s:List>
-	<s:Label x="10" y="14" color="#F8F7CE" fontSize="32" text="Who's in Trouble?" filters="{filterArray}" />
+	<s:Label id="titleLabel" x="10" y="14" text="Who's in Trouble?" filters="{filterArray}" />
 </s:View>

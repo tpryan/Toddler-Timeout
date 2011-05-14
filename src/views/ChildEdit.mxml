@@ -25,6 +25,11 @@
 			
 			protected function init(event:FlexEvent):void
 			{
+				
+				if (data.os == "iPhone3,1"){
+					activateSoftControls();
+				}
+				
 				kid = data.kid;
 				position = data.position;
 				
@@ -53,6 +58,10 @@
 				navigator.defaultPopTransition = trans;
 				
 				
+			}
+			
+			protected function activateSoftControls():void{
+				this.actionBarVisible = true;
 			}
 			
 			
@@ -118,9 +127,8 @@
 		<s:Button id="deleteButton" click="deleteButton_clickHandler(event)"  icon="@Embed('/assets/delete.png')"  />
 	</s:actionContent>
 	
-	<s:Image source="@Embed('/assets/backgroundStartBurst.png')" verticalCenter="0" horizontalCenter="0" width="2000" height="2000" />
 	
-	<s:Rect top="10" left="10" right="10" bottom="10">
+	<s:Rect width="{form.width + 20}" height="{form.height + 20	}" verticalCenter="0" horizontalCenter="0">
 		<s:fill>
 			<s:SolidColor color="0xFFFFFF" />
 		</s:fill>
@@ -129,14 +137,12 @@
 		</s:stroke>
 	</s:Rect>
 	
-	<s:Group top="15" left="15" right="15" bottom="15">
+	<s:Group id="form" verticalCenter="0" horizontalCenter="0">
 		<s:layout>
 			<s:FormLayout paddingBottom="10" horizontalAlign="center" />
 		</s:layout>
 		
-		<s:Label id="nameLabel"  text="Name:"/>
-		<s:TextInput id="nameField" text="{kid.name}" width="100%"    textAlign="center"/>
-		<s:Label text="How Long?"/>
+		<s:TextInput id="nameField" text="{kid.name}" width="100%" textAlign="center"/>
 		
 		<s:Group id="pickers" width="100%">
 			<s:layout>
@@ -157,7 +163,7 @@
 		
 	</s:Group>
 	
-	<components:DeleteButton id="deleteMenu" left="0" right="0" bottom="0" visible="false" click="deleteButton_clickHandler(event)" />
+	<components:DeleteButton id="deleteMenu" left="0" right="0" bottom="0" visible="false" clicked="deleteButton_clickHandler(event)" />
 	
 	
 </s:View>

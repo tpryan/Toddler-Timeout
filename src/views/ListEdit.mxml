@@ -18,6 +18,11 @@
 			
 			protected function init(event:FlexEvent):void
 			{
+				
+				if (data.os == "iPhone3,1"){
+					activateSoftControls();
+				}
+				
 				var tmp:Object = data;
 				if (data.kidsService != null){
 					kidsService = data.kidsService;
@@ -28,12 +33,18 @@
 				
 				kids = kidsService.list;
 				
-				dataToPush.kidsService = kidsService;
+				dataToPush = data;
 
 				var trans:SlideViewTransition = new SlideViewTransition();
 				trans.direction = "up";
 				navigator.defaultPopTransition = trans;
 				
+			}
+			
+			protected function activateSoftControls():void{
+				this.actionBarVisible = true;
+				removeElement(titleLabel);
+				kidList.top = 10;
 			}
 			
 			
@@ -54,14 +65,13 @@
 				navigator.popView();
 			}
 			
-			protected function newButton_clickHandler(event:MouseEvent):void
+			protected function newButton_clickHandler(event:Event):void
 			{
-				var dataToPush:Object = new Object();
-				dataToPush.kidsService = kidsService;
 				dataToPush.position = -1;
 				dataToPush.kid = new Kid();
 				dataToPush.kid.name = "New Kid";
 				navigator.pushView(ChildEdit,dataToPush);
+				trace("Child Edit Pushed");
 				
 			}
 			
@@ -79,7 +89,7 @@
 	
 	<fx:Declarations>
 		<fx:Array id="filterArray">
-			<s:GlowFilter id="glow" blurX="8" blurY="8" color="#000000" quality="2" strength="1" alpha=".5" />
+			<s:GlowFilter id="glow" blurX="8" blurY="8" color="#000000" quality="2" strength="1" alpha=".7" />
 		</fx:Array>
 	</fx:Declarations>
 	
@@ -91,10 +101,9 @@
 		<s:Button id="newButton" click="newButton_clickHandler(event)"  icon="@Embed('/assets/plus.png')"  />
 	</s:actionContent>
 	
-	<s:Image source="@Embed('/assets/backgroundStartBurst.png')" verticalCenter="0" horizontalCenter="0" width="1500" height="1500" />
 	
 	
-	<s:Label x="10" y="14" color="#F8F7CE" fontSize="32" text="Edit List" filters="{filterArray}" />
+	<s:Label id="titleLabel"  x="10" y="14" color="#F8F7CE" text="Edit List" filters="{filterArray}" />
 	
 	<s:List id="kidList" left="10" right="10" top="57" bottom="10" dataProvider="{kids}" labelField="name" click="kidList_clickHandler(event)" cacheAsBitmap="true" borderColor="0xcccccc" borderVisible="true">
 		<s:itemRenderer>
@@ -134,7 +143,7 @@
 		</s:itemRenderer>
 	</s:List>
 	
-	<components:AddButton id="addMenu" left="0" right="0" bottom="0" visible="false" click="newButton_clickHandler(event)" />
+	<components:AddButton id="addMenu" left="0" right="0" bottom="0" visible="false" clicked="newButton_clickHandler(event)" />
 	
 	
 </s:View>

@@ -11,7 +11,7 @@ package
 		
 		
 		
-		
+		[Bindable]
 		public function get name():String { return _name; }
 		
 		public function set name(value:String):void

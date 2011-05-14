@@ -3,19 +3,22 @@
 							xmlns:s="library://ns.adobe.com/flex/spark"
 							creationComplete="init(event)" 
 							splashScreenImage="@Embed('assets/splashScreen.png')"
-							splashScreenScaleMode="none">
+							splashScreenScaleMode="none" skinClass="skins.AppSkin"  
+						
+							>
 	
 	<fx:Style source="main.css"/>
 	
 	<fx:Script>
 		<![CDATA[
-			import com.terrenceryan.fonts.ComicSerif;
-			import com.terrenceryan.fonts.ComicSerifTLF;
+			import com.terrenceryan.fonts.Eurostile;
+			import com.terrenceryan.fonts.EurostileTLF;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.CollectionEvent;
 			import mx.events.FlexEvent;
 			
+			import spark.components.Image;
 			import spark.transitions.FlipViewTransition;
 			
 			import views.ListView;
@@ -24,15 +27,24 @@
 			protected var kidsService:Kids = new Kids();
 			protected var dataToPush:Object = new Object();
 			
+			[Bindable]
+			[Embed(source="/assets/backgroundStartBurst.png")]
+			private var bgClass:Class;
+
+			private var bg:Image = new Image();
 			
 			
 			protected function init(event:FlexEvent):void
 			{
 				//TODO: Remove code if it needs to be removed.
 				//NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, onDeactivateApp);
+				this.actionBar.visible = false;
+				
 				getFonts();
 				kidsService.addEventListener("result", onResult);
 				kidsService.initList();
+				
+				
 			}
 			
 			protected function onDeactivateApp(event:Event):void
@@ -42,8 +54,8 @@
 			
 			private function getFonts():void
 			{
-				var myFont1:Font = new ComicSerifTLF() as Font;
-				var myFont2:Font = new ComicSerif() as Font;
+				var myFont1:Font = new Eurostile() as Font;
+				var myFont2:Font = new EurostileTLF() as Font;
 				var fonts:Array = Font.enumerateFonts();
 				for each (var key:Font in fonts)
 				{
@@ -54,11 +66,16 @@
 			protected function onResult(event:Event):void
 			{
 				dataToPush.kidsService = kidsService;
+				dataToPush.os = Capabilities.os;
+				//dataToPush.os = "iPhone3,1";
 				navigator.pushView(views.ListView, dataToPush);
 			}
 			
 		]]>
 	</fx:Script>
+	<fx:Declarations>
+		<s:Image id="backgroundImage" source="@Embed('/assets/backgroundStartBurst.png')" verticalCenter="0" horizontalCenter="0" width="1500" height="1500" />
+	</fx:Declarations>
 	
 	
 </s:ViewNavigatorApplication>

@@ -2,7 +2,7 @@
 <application xmlns="http://ns.adobe.com/air/application/2.6">
 	<id>com.terrenceryan.TimeOut</id>
 	<filename>Toddler TimeOut</filename>
-	<name>ToddlerTimeOut!</name>
+	<name>TimeOut!</name>
 	<versionNumber>0.11.0</versionNumber>
 	<versionLabel>00011</versionLabel>
 	<description>A timeout timer for unruly kids.</description>
@@ -17,11 +17,13 @@
 	<icon>
 		<!--<image16x16></image16x16>-->
 		<!--<image32x32></image32x32>-->
-<!--		<image36x36>assets/icons/36.png</image36x36>-->
 		<image29x29>assets/icons/29.png</image29x29>
+		<image36x36>assets/icons/36.png</image36x36>
 		<image48x48>assets/icons/48.png</image48x48>
 		<image57x57>assets/icons/57.png</image57x57>
 		<image72x72>assets/icons/72.png</image72x72>
+		<image512x512>assets/icons/512.png</image512x512>
+		
 		<!--<image114x114></image114x114>-->
 		<!--<image128x128></image128x128>-->
 	</icon>
@@ -43,6 +45,7 @@
 				    <string>2</string> 
 				</array>
             ]]> 
-        </InfoAdditions> 
+        </InfoAdditions>
+        <requestedDisplayResolution>high</requestedDisplayResolution> 
     </iPhone> 
 </application>

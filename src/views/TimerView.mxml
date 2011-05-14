@@ -43,6 +43,11 @@
 			
 			protected function init(event:FlexEvent):void
 			{
+				
+				if (data.os == "iPhone3,1"){
+					activateSoftControls();
+				}
+				
 				dataToPush = data;
 				
 				
@@ -73,6 +78,15 @@
 					
 				}
 				
+				
+			}
+			
+			protected function activateSoftControls():void{
+				this.actionBarVisible = true;
+				clock.verticalCenter = 47;
+				countDownText.verticalCenter = countDownText.verticalCenter + 47;
+				clockControls.verticalCenter = clockControls.verticalCenter + 47;
+				kidName.verticalCenter = kidName.verticalCenter + 47;
 				
 			}
 			
@@ -271,7 +285,6 @@
 		<s:Button id="backButton" click="backButton_clickHandler(event)" icon="@Embed('/assets/arrowleft.png')"/>
 	</s:navigationContent>
 	
-	<s:Image id="background" source="@Embed('/assets/backgroundStartBurst.png')" verticalCenter="0" horizontalCenter="0" width="2000" height="2000" />
 	
 	
 	<mx:PieChart id="clock" top="2" click="timerButton_clickHandler(event)" horizontalCenter="0" 

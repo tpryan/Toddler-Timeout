@@ -17,11 +17,14 @@ global
 	font-size: 35;
 }
 
+s|View{
+	backgroundAlpha: 0;
+}
+
 s|ActionBar 
 {
-	chrome-color: #EBEAC3;
-	
-	
+	color: #EBEAC3;
+	chrome-color: #A1ABB1;
 	
 }
 
@@ -33,10 +36,27 @@ s|Button
 
 s|ActionBar #titleDisplay
 {
-	color: #FF0000;
+	color: #EBEAC3;
 	font-weight: normal;
 	font-size: 22;
 	
+}
+
+#titleLabel{
+	color: #F8F7CE;
+}
+
+@media all and (application-dpi: 160) 
+{
+	s|ActionBar #titleDisplay
+	{
+		font-size: 25;
+		
+	}
+	
+	#titleLabel{
+		fontSize: 38;
+	}
 }
 
 @media all and (application-dpi: 240) 
@@ -46,6 +66,10 @@ s|ActionBar #titleDisplay
 		font-size: 35;
 		
 	}
+	
+	#titleLabel{
+		fontSize: 50;
+	}
 }
 
 @media all and (application-dpi: 320) 
@@ -54,6 +78,10 @@ s|ActionBar #titleDisplay
 	{
 		font-size: 40;
 		
+	}
+	
+	#titleLabel{
+		fontSize: 60;
 	}
 }
 
@@ -69,9 +97,6 @@ s|IconItemRenderer {
 	
 }
 
-s|TextInput{
-	fontFamily: serif;
-}
 
 s|Label{
 	fontSize: 30;

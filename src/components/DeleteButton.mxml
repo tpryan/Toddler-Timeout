@@ -3,14 +3,14 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 height="100">
 	<fx:Metadata>
-		[Event(name="click", type="flash.events.MouseEvent")]
+		[Event(name="clicked", type="flash.events.MouseEvent")]
 	</fx:Metadata>
 	
 	<fx:Script>
 		<![CDATA[
-			protected function deleteButton_clickHandler(event:MouseEvent):void
+			protected function deleteButton_clickHandler(event:Event):void
 			{
-				dispatchEvent(new MouseEvent("click"));
+				dispatchEvent(new MouseEvent("clicked"));
 				
 			}
 		]]>

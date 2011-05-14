@@ -213,6 +213,7 @@
 	
 	<!-- IOS Steps -->
 	<target name="ios" depends="ios.compile, ios.collect, ios.package" description="All of the tasks needed to create an IOS IPA file." />
+	<target name="ios.debug" depends="ios.compile, ios.collect, ios.package.debug" description="All of the tasks needed to create an IOS IPA file, but uses the interpreted, poorer performing version. " />
 	
 	<target name="ios.compile" depends="device.compile" />
 	
@@ -236,7 +237,7 @@
 		</copy>
 	</target>
 	
-	<target name="ios.package" depends="createAppStore">
+	<target name="ios.package.debug" depends="createAppStore">
 		<echo message="Packaging for IOS"/>
 		<exec executable="${IOS_ADT}" dir="${ios.collect}">
 			<arg value="-package"/>
@@ -257,6 +258,27 @@
 		<copy file="${ios.collect}/${app.name}.ipa" todir="${build.dir}/APPS" preservelastmodified="true" />
 		
 	</target>
+	
+	<target name="ios.package" depends="createAppStore">
+			<echo message="Packaging for IOS"/>
+			<exec executable="${IOS_ADT}" dir="${ios.collect}">
+				<arg value="-package"/>
+				<arg line="-target ipa-ad-hoc "/>
+				<arg line="-provisioning-profile ${ios.provision} " />
+				<arg line="-storetype pkcs12 "/>
+				<arg line="-keystore ${ios.cert} " />
+				<arg line="-storepass ${ios.certpass} " />
+				
+				<arg value="${app.name}.ipa"/>
+				<arg value="${app.name}-app.xml"/>
+				<arg value="${app.name}.swf"/>
+				<arg value="assets"/>
+			</exec>
+			
+			<echo message="Copying IOS App to App Folder"/>
+			<copy file="${ios.collect}/${app.name}.ipa" todir="${build.dir}/APPS" preservelastmodified="true" />
+			
+		</target>
 	
 	<!-- BlackBerry Steps -->
 	<target name="blackberry" depends="blackberry.compile, blackberry.collect, blackberry.package" description="All of the tasks needed to create an BlackBerry BAR file." />
