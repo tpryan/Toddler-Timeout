@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx" resize="view1_resizeHandler(event)"
-		xmlns:components="components.*"
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+		xmlns:components="components.*" resize="onResizeView(event)"
 		actionBarVisible="false" cacheAsBitmap="true" creationComplete="init(event)"
 		title="Time Out!" viewDeactivate="onDeactivate()" >
 	<fx:Script>
@@ -43,8 +43,8 @@
 			
 			protected function init(event:FlexEvent):void
 			{
-				
-				if (data.os == "iPhone3,1"){
+				checkOrientation();
+				if (data.os.indexOf("iPhone") >= 0){
 					activateSoftControls();
 				}
 				
@@ -208,13 +208,28 @@
 			}
 			
 			protected function setChartSize(e:Event):void{
+				trace("Resized");
 				if(currentState == "landscape"){
-					clock.width = stage.stageHeight - 2;
-					clock.height = stage.stageHeight - 2;
+					
+					if (data.os.indexOf("iPhone") >= 0){
+						clock.width = stage.stageHeight - 100;
+						clock.height = stage.stageHeight - 100;
+						clock.verticalCenter = -15;
+						
+						countDownText.verticalCenter = (-countDownText.height/4 - 5) -15;
+						clockControls.verticalCenter = (clock.height/6) -15;
+					}
+					else{
+						clock.width = stage.stageHeight - 2;
+						clock.height = stage.stageHeight - 2;
+					}
 				}
 				else{
 					clock.width = stage.stageWidth - 2;
 					clock.height = stage.stageWidth - 2;
+					
+					countDownText.verticalCenter = (-countDownText.height/4 - 5);
+					clockControls.verticalCenter = (clock.height/6);
 				}
 			}
 			
@@ -312,7 +327,7 @@
 	<s:Label id="kidName" text="{data.kid.name}" fontSize="{DEFAULT_FONT_SIZE}"
 			 filters="{filterArray}"
 			 horizontalCenter.portrait="0" left.landscape="10" 
-			 verticalCenter.portrait="{-(clock.height/2 + 20)}"
+			 verticalCenter.portrait="{-(clock.height/2 + 30)}"
 			 top.landscape="10"
 			 />
 	

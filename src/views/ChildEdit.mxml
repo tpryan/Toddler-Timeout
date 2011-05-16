@@ -26,7 +26,7 @@
 			protected function init(event:FlexEvent):void
 			{
 				
-				if (data.os == "iPhone3,1"){
+				if (data.os.indexOf("iPhone") >= 0){
 					activateSoftControls();
 				}
 				

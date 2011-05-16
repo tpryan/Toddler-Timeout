@@ -85,11 +85,23 @@ s|ActionBar #titleDisplay
 	}
 }
 
-
+@media all and (os-platform: "IOS") 
+{
+	s|TextInput{
+		fontFamily: serif;
+	}
+	
+	s|ActionBar #titleDisplay
+	{
+		fontFamily: "Eurostile";
+		fontWeight: bold;
+	}
+	
+}
 
 s|IconItemRenderer {
 	chromeColor: #A1ABB1;
-	contentBackgroundColor: #A1ABB1;
+	contentsColor: #A1ABB1;
 	rollOverColor: #A1ABB1;
 	focusColor: #A1ABB1;
 	selectionColor: #A1ABB1;
