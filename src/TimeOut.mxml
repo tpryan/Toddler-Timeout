@@ -67,7 +67,16 @@
 			{
 				dataToPush.kidsService = kidsService;
 				dataToPush.os = Capabilities.os;
-				//dataToPush.os = "iPhone3,1";
+				dataToPush.os = "iPhone3,1";
+				if (dataToPush.os.indexOf("iPhone") >= 0){
+					dataToPush.softControls = true;
+				}
+				else{
+					dataToPush.softControls = false;
+				}
+				
+				
+				
 				navigator.pushView(views.ListView, dataToPush);
 			}
 			

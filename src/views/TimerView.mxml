@@ -44,7 +44,7 @@
 			protected function init(event:FlexEvent):void
 			{
 				checkOrientation();
-				if (data.os.indexOf("iPhone") >= 0){
+				if (data.softControls == true){
 					activateSoftControls();
 				}
 				
@@ -211,7 +211,7 @@
 				trace("Resized");
 				if(currentState == "landscape"){
 					
-					if (data.os.indexOf("iPhone") >= 0){
+					if (data.softControls == true){
 						clock.width = stage.stageHeight - 100;
 						clock.height = stage.stageHeight - 100;
 						clock.verticalCenter = -15;
