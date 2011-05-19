@@ -297,7 +297,7 @@
 	</fx:Declarations>
 	
 	<s:navigationContent>
-		<s:Button id="backButton" click="backButton_clickHandler(event)" icon="@Embed('/assets/arrowleft.png')"/>
+		<s:Button id="backButton" click="backButton_clickHandler(event)"  label="Back" />
 	</s:navigationContent>
 	
 	
