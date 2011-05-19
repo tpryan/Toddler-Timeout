@@ -34,6 +34,8 @@ s|Button
 	
 }
 
+
+
 s|ActionBar #titleDisplay
 {
 	color: #EBEAC3;
@@ -41,6 +43,7 @@ s|ActionBar #titleDisplay
 	font-size: 22;
 	
 }
+
 
 #titleLabel{
 	color: #F8F7CE;
@@ -88,7 +91,14 @@ s|ActionBar #titleDisplay
 @media all and (os-platform: "IOS") 
 {
 	s|TextInput{
-		fontFamily: serif;
+		fontFamily: Helvetica, sans-serif;
+		fontWeight:normal;
+	}
+	
+	s|ActionBar{
+		defaultButtonAppearance:"beveled";
+		titleAlign:"center";
+		
 	}
 	
 	s|ActionBar #titleDisplay
@@ -99,6 +109,8 @@ s|ActionBar #titleDisplay
 	
 }
 
+
+
 s|IconItemRenderer {
 	chromeColor: #A1ABB1;
 	contentsColor: #A1ABB1;
@@ -108,6 +120,8 @@ s|IconItemRenderer {
 	color: #000000;
 	
 }
+
+
 
 
 s|Label{

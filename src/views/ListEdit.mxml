@@ -35,10 +35,11 @@
 				
 				dataToPush = data;
 
-				var trans:SlideViewTransition = new SlideViewTransition();
-				trans.direction = "up";
-				navigator.defaultPopTransition = trans;
-				
+				if (data.softControls == false){
+					var trans:SlideViewTransition = new SlideViewTransition();
+					trans.direction = "up";
+					navigator.defaultPopTransition = trans;
+				}
 			}
 			
 			protected function activateSoftControls():void{
@@ -94,11 +95,11 @@
 	</fx:Declarations>
 	
 	<s:navigationContent>
-		<s:Button id="backButton" click="backButton_clickHandler(event)"  icon="@Embed('/assets/arrowleft.png')"  />
+		<s:Button id="backButton" click="backButton_clickHandler(event)" label="Back"  />
 	</s:navigationContent>
 	
 	<s:actionContent>
-		<s:Button id="newButton" click="newButton_clickHandler(event)"  icon="@Embed('/assets/plus.png')"  />
+		<s:Button id="newButton" click="newButton_clickHandler(event)"  label="Add"  />
 	</s:actionContent>
 	
 	

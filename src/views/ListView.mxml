@@ -108,7 +108,7 @@
 	</fx:Declarations>
 	
 	<s:actionContent>
-		<s:Button id="editButton"  click="editButton_clickHandler(event)" icon="@Embed('/assets/pencilangled.png')"   />
+		<s:Button id="editButton"  click="editButton_clickHandler(event)" label="Edit"   />
 	</s:actionContent>
 	
 	

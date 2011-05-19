@@ -120,11 +120,11 @@
 	
 	
 	<s:navigationContent>
-		<s:Button id="backButton" click="backButton_clickHandler(event)"  icon="@Embed('/assets/arrowleft.png')"  />
+		<s:Button id="backButton" click="backButton_clickHandler(event)"  label="Back"  />
 	</s:navigationContent>
 	
 	<s:actionContent>
-		<s:Button id="deleteButton" click="deleteButton_clickHandler(event)"  icon="@Embed('/assets/delete.png')"  />
+		<s:Button id="deleteButton" click="deleteButton_clickHandler(event)"  label="Delete"  />
 	</s:actionContent>
 	
 	
