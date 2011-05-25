@@ -109,6 +109,24 @@ s|ActionBar #titleDisplay
 	
 }
 
+@media all and (os-platform: "QNX") 
+{
+	
+	s|ActionBar{
+		defaultButtonAppearance: normal;
+		titleAlign:"left";
+		
+	}
+	
+	s|ActionBar #titleDisplay
+	{
+		fontFamily: "Eurostile";
+		fontWeight: bold;
+		fontSize: 48;
+	}
+	
+}
+
 
 
 s|IconItemRenderer {

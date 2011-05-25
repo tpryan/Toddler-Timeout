@@ -67,8 +67,14 @@
 			{
 				dataToPush.kidsService = kidsService;
 				dataToPush.os = Capabilities.os;
-				dataToPush.os = "iPhone3,1";
+				dataToPush.os = "QNX";
+				
+				trace(Capabilities.os);
+				
 				if (dataToPush.os.indexOf("iPhone") >= 0){
+					dataToPush.softControls = true;
+				}
+				else if (dataToPush.os.indexOf("QNX") >= 0){
 					dataToPush.softControls = true;
 				}
 				else{
