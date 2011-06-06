@@ -67,7 +67,6 @@
 			{
 				dataToPush.kidsService = kidsService;
 				dataToPush.os = Capabilities.os;
-				dataToPush.os = "QNX";
 				
 				trace(Capabilities.os);
 				
