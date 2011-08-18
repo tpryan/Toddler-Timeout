@@ -66,11 +66,11 @@
 			protected function onResult(event:Event):void
 			{
 				dataToPush.kidsService = kidsService;
-				dataToPush.os = Capabilities.os;
+				dataToPush.os = Capabilities.version;
 				
 				trace(Capabilities.os);
 				
-				if (dataToPush.os.indexOf("iPhone") >= 0){
+				if (dataToPush.os.indexOf("IOS") >= 0){
 					dataToPush.softControls = true;
 				}
 				else if (dataToPush.os.indexOf("QNX") >= 0){

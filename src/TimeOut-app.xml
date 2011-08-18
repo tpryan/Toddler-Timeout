@@ -3,8 +3,8 @@
 	<id>com.terrenceryan.TimeOut</id>
 	<filename>Toddler TimeOut</filename>
 	<name>TimeOut!</name>
-	<versionNumber>0.11.0</versionNumber>
-	<versionLabel>00011</versionLabel>
+	<versionNumber>0.12.0</versionNumber>
+	<versionLabel>00012</versionLabel>
 	<description>A timeout timer for unruly kids.</description>
 	<copyright>2011</copyright>
 	<initialWindow>
