@@ -130,8 +130,8 @@
 		<s:VerticalLayout paddingTop="0" />
 	</s:layout>
 	
-	<s:Button id="up" click="up_clickHandler(event)" label="+" height="80" width="80" fontSize="40" />
+	<s:Button id="up" click="up_clickHandler(event)" label="+" height="80" width="80" fontSize="80" />
 	<s:Label id="display" fontSize="40"  textAlign="center"    width="80" />
-	<s:Button id="down" click="down_clickHandler(event)" label="-"  height="80" width="80" fontSize="40" />
+	<s:Button id="down" click="down_clickHandler(event)" label="-"  height="80" width="80" fontSize="80" />
 	
 </s:View>

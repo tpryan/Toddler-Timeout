@@ -112,6 +112,11 @@ s|ActionBar #titleDisplay
 		color: #FFFFFF;
 	}
 	
+	s|ActionBar  s|Button
+	{
+		color: #A1ABB1;
+	}
+	
 }
 
 @media all and (os-platform: "QNX") 
@@ -144,10 +149,12 @@ s|IconItemRenderer {
 	
 }
 
-
-
-
 s|Label{
 	fontSize: 30;
 }
 
+s|ViewMenuItem {
+	fontFamily: "Eurostile";
+	fontWeight: bold;
+	
+}
