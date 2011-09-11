@@ -45,7 +45,7 @@ s|ActionBar #titleDisplay
 }
 
 
-#titleLabel{
+#titleLabel, .titleLabel{
 	color: #F8F7CE;
 }
 
@@ -105,6 +105,11 @@ s|ActionBar #titleDisplay
 	{
 		fontFamily: "Eurostile";
 		fontWeight: bold;
+	}
+	
+	#deleteBtnIOS, .deleteBtnIOS{
+		chromeColor: #FF0000;
+		color: #FFFFFF;
 	}
 	
 }

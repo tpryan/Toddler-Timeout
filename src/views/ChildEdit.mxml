@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" keyDown="keyPress(event)" 
+		xmlns:s="library://ns.adobe.com/flex/spark"  
 		xmlns:components="components.*" actionBarVisible="false"
 		title="{data.kid.name}" creationComplete="init(event)" >
 		
 	
 	<fx:Script>
 		<![CDATA[
-			import components.DeleteButton;
-			
+			import com.terrenceryan.timeout.Kids;
+			import com.terrenceryan.timeout.Kid;
 			import mx.events.FlexEvent;
 			
+			import spark.events.TextOperationEvent;
 			import spark.transitions.SlideViewTransition;
 			
 			[Bindable]
@@ -26,13 +27,12 @@
 			protected function init(event:FlexEvent):void
 			{
 				
-				if (data.softControls == true){
-					activateSoftControls();
-				}
-				
 				kid = data.kid;
 				position = data.position;
 				
+				if (data.softControls == true){
+					activateSoftControls();
+				}
 				
 				if (data.kidsService != null){
 					kidsService = data.kidsService;
@@ -47,12 +47,6 @@
 				minutesPicker.value = minutes;
 				secondsPicker.value = seconds;
 				
-				if (kid.name == "New Kid"){
-					nameField.setStyle("color",0xAAAAAA);
-					nameField.addEventListener(FocusEvent.FOCUS_IN, fieldReset);
-					
-				}
-				
 				var trans:SlideViewTransition = new SlideViewTransition();
 				trans.direction = "right";
 				navigator.defaultPopTransition = trans;
@@ -62,6 +56,23 @@
 			
 			protected function activateSoftControls():void{
 				this.actionBarVisible = true;
+				saveButton.visible = false;
+				
+				if (kid.name){
+					addDeleteButton();
+				}
+			
+			}
+			
+			private function addDeleteButton():void{
+				var deleteBtnIOS:Button = new Button();
+				deleteBtnIOS.label = "Delete";
+				deleteBtnIOS.styleName = "deleteBtnIOS";
+				deleteBtnIOS.left = 15;
+				deleteBtnIOS.right = 15;
+				deleteBtnIOS.bottom = 20;
+				deleteBtnIOS.addEventListener(MouseEvent.CLICK, deleteButton_clickHandler);
+				this.addElement(deleteBtnIOS);
 			}
 			
 			
@@ -100,23 +111,16 @@
 				
 			}
 			
-			protected function keyPress(event:KeyboardEvent):void
-			{
-				trace(event.keyCode);
-				
-				if (event.keyCode == Keyboard.MENU){
-					deleteMenu.visible = true;
-				}
-			}
 			
+			
+			protected function nameField_changeHandler(event:TextOperationEvent):void
+			{
+				title = nameField.text;
+				
+			}
 			
 		]]>
 	</fx:Script>
-	
-	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
-	</fx:Declarations>
-	
 	
 	
 	<s:navigationContent>
@@ -124,11 +128,10 @@
 	</s:navigationContent>
 	
 	<s:actionContent>
-		<s:Button id="deleteButton" click="deleteButton_clickHandler(event)"  label="Delete"  />
+		<s:Button id="deleteButton" click="saveButton_clickHandler(event)"  label="Done"  />
 	</s:actionContent>
 	
-	
-	<s:Rect width="{form.width + 20}" height="{form.height + 20	}" verticalCenter="0" horizontalCenter="0">
+	<s:Rect left="10" right="10" top="10" bottom="10">
 		<s:fill>
 			<s:SolidColor color="0xFFFFFF" />
 		</s:fill>
@@ -137,12 +140,12 @@
 		</s:stroke>
 	</s:Rect>
 	
-	<s:Group id="form" verticalCenter="0" horizontalCenter="0">
+	<s:Group id="form"  left="15" right="15" top="15" bottom="15">
 		<s:layout>
-			<s:FormLayout paddingBottom="10" horizontalAlign="center" />
+			<s:FormLayout  horizontalAlign="center" />
 		</s:layout>
 		
-		<s:TextInput id="nameField" text="{kid.name}" width="100%" textAlign="center"/>
+		<s:TextInput id="nameField" text="{kid.name}" width="100%" textAlign="center" prompt="New Kid" change="nameField_changeHandler(event)"/>
 		
 		<s:Group id="pickers" width="100%">
 			<s:layout>
@@ -159,11 +162,10 @@
 		<s:Button id="saveButton" width="180" horizontalCenter="0" click="saveButton_clickHandler(event)"
 				  icon="@Embed('/assets/disk.png')" iconPlacement="right"/>
 		
-		
-		
 	</s:Group>
 	
-	<components:DeleteButton id="deleteMenu" left="0" right="0" bottom="0" visible="false" clicked="deleteButton_clickHandler(event)" />
-	
+	<s:viewMenuItems>
+		<s:ViewMenuItem id="deleteviewMenuItem" label="Delete" click="deleteButton_clickHandler(event)" icon="@Embed('/assets/delete.png')" />
+	</s:viewMenuItems>
 	
 </s:View>

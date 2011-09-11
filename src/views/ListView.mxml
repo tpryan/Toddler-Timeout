@@ -5,9 +5,13 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.terrenceryan.timeout.Kids;
+			import com.terrenceryan.timeout.Kid;
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 			
+			import spark.components.Label;
+			import spark.filters.GlowFilter;
 			import spark.primitives.BitmapImage;
 			import spark.transitions.FlipViewTransition;
 			import spark.transitions.SlideViewTransition;
@@ -24,6 +28,9 @@
 				if (data.softControls == true){
 					activateSoftControls();
 				}
+				else{
+					activateHardControls();
+				}
 				
 				var tmp:Object = data;
 				kidsService = data.kidsService;
@@ -32,7 +39,7 @@
 				
 				dataToPush.position = -1;
 				dataToPush.kid = new Kid;
-				dataToPush.kid.name = "New Kid";
+				dataToPush.kid.name = "";
 				
 				kids = tmp.kidsService.list;
 				
@@ -55,8 +62,29 @@
 			
 			protected function activateSoftControls():void{
 				this.actionBarVisible = true;
-				removeElement(titleLabel);
 				kidList.top = 10;
+			}
+			
+			protected function activateHardControls():void
+			{
+
+				
+				var glow:GlowFilter = new GlowFilter();
+				glow.blurX = 8;
+				glow.blurY = 8;
+				glow.color = 0x000000; 
+				glow.quality = 2; 
+				glow.strength = 1; 
+				glow.alpha = .7;
+				
+				
+				var titleLabel:Label = new Label();
+				titleLabel.x=10;
+				titleLabel.y=14; 
+				titleLabel.text="Who's in Trouble?";
+				titleLabel.filters=[glow];
+				titleLabel.styleName = "titleLabel";
+				addElement(titleLabel);
 			}
 			
 			
@@ -98,13 +126,13 @@
 				}
 			}
 			
+			
+			
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
-		<fx:Array id="filterArray">
-			<s:GlowFilter id="glow" blurX="8" blurY="8" color="#000000" quality="2" strength="1" alpha=".7" />
-		</fx:Array>
+		
 	</fx:Declarations>
 	
 	<s:actionContent>
@@ -120,6 +148,7 @@
 					
 					<fx:Script>
 						<![CDATA[
+							import com.terrenceryan.timeout.Kid;
 							import flash.utils.clearInterval;
 							
 							import spark.components.supportClasses.StyleableTextField;
@@ -195,5 +224,5 @@
 		</s:itemRenderer>
 	
 	</s:List>
-	<s:Label id="titleLabel" x="10" y="14" text="Who's in Trouble?" filters="{filterArray}" />
+	
 </s:View>

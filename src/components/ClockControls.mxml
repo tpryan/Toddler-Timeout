@@ -94,7 +94,6 @@
 	</fx:Script>
 
 	<s:Rect id="chrome" width="{_componentWidth}" height="{_componentHeight}" minHeight="80"  blendMode="normal" alpha=".5" radiusX="20" radiusY="20">
-	
 		<s:fill>
 			<s:SolidColor color="#FFFFFF"/>
 		</s:fill>

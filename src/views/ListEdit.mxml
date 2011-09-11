@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" actionBarVisible="false" keyDown="keyPress(event)"
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" actionBarVisible="false"
 		xmlns:s="library://ns.adobe.com/flex/spark" title="Edit List" creationComplete="init(event)" xmlns:components="components.*">
 	
 	<fx:Script>
 		<![CDATA[
+			import com.terrenceryan.timeout.Kids;
+			import com.terrenceryan.timeout.Kid;
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 			
@@ -51,12 +53,12 @@
 			
 			protected function kidList_clickHandler(event:MouseEvent):void
 			{
-				
-				dataToPush.position = kidList.selectedIndex;
-				dataToPush.kid = kidList.selectedItem;
-				kidList.selectedIndex = -1;
-				navigator.pushView(ChildEdit,dataToPush);
-				
+				if (kidList.selectedIndex > -1 ){
+					dataToPush.position = kidList.selectedIndex;
+					dataToPush.kid = kidList.selectedItem;
+					kidList.selectedIndex = -1;
+					navigator.pushView(ChildEdit,dataToPush);
+				}
 			}
 			
 			
@@ -70,20 +72,12 @@
 			{
 				dataToPush.position = -1;
 				dataToPush.kid = new Kid();
-				dataToPush.kid.name = "New Kid";
+				dataToPush.kid.name = "";
 				navigator.pushView(ChildEdit,dataToPush);
 				trace("Child Edit Pushed");
 				
 			}
 			
-			protected function keyPress(event:KeyboardEvent):void
-			{
-				trace(event.keyCode);
-				
-				if (event.keyCode == Keyboard.MENU){
-					addMenu.visible = true;
-				}
-			}
 			
 		]]>
 	</fx:Script>
@@ -144,7 +138,10 @@
 		</s:itemRenderer>
 	</s:List>
 	
-	<components:AddButton id="addMenu" left="0" right="0" bottom="0" visible="false" clicked="newButton_clickHandler(event)" />
+	<s:viewMenuItems>
+		<s:ViewMenuItem id="addButton" label="Add" click="newButton_clickHandler(event)" icon="@Embed('/assets/plus.png')" />
+	</s:viewMenuItems>
+	
 	
 	
 </s:View>

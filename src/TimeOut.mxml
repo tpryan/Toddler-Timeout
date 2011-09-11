@@ -11,6 +11,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.terrenceryan.timeout.Kids;
 			import com.terrenceryan.fonts.Eurostile;
 			import com.terrenceryan.fonts.EurostileTLF;
 			

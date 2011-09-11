@@ -1,4 +1,4 @@
-package
+package com.terrenceryan.timeout
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
