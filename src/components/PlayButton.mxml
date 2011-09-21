@@ -9,9 +9,12 @@
 	<fx:Script>
 		
 		<![CDATA[
+			
+			[Bindable]
 			[Embed(source='/assets/reload.png')]
 			private static var ReloadIcon:Class;
 			
+			[Bindable]
 			[Embed(source='/assets/play.png')]
 			private static var PlayIcon:Class;
 			
@@ -49,7 +52,7 @@
 			
 			
 			public function switchReloadToPlay():void{
-				icon.setStyle("icon", PlayIcon);
+				icon.source = PlayIcon;
 			}
 			
 			public function switchPlayToReload():void{
@@ -60,5 +63,5 @@
 		]]>
 	</fx:Script>
 	
-	<s:Image id="icon" x="0" y="0" source="assets/play.png" alpha="{itemAlpha}"/>
+	<s:BitmapImage id="icon" x="0" y="0" source="{PlayIcon}" alpha="{itemAlpha}"/>
 </s:Group>

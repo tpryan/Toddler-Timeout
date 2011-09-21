@@ -13,6 +13,10 @@
 			
 			[Bindable]
 			protected var itemAlpha:Number = .5; 
+			
+			[Bindable]
+			[Embed(source='/assets/delete.png')]
+			private static var DeleteIcon:Class;
 
 			protected function clickHandler():void
 			{
@@ -42,5 +46,5 @@
 		]]>
 	</fx:Script>
 	
-	<s:Image id="icon" x="0" y="0" source="assets/delete.png" alpha="{itemAlpha}"/>
+	<s:BitmapImage id="icon" x="0" y="0" source="{DeleteIcon}" alpha="{itemAlpha}"/>
 </s:Group>
