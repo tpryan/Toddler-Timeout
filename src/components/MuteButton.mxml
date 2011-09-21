@@ -14,6 +14,11 @@
 			[Bindable]
 			protected var itemAlpha:Number = .5; 
 			
+			[Bindable]
+			[Embed(source='/assets/volume_on.png')]
+			private static var OnIcon:Class;
+			
+			
 			public function get state():String
 			{
 				return _state;
@@ -63,5 +68,5 @@
 		]]>
 	</fx:Script>
 	
-	<s:Image id="icon" x="0" y="0" source="assets/volume_on.png" alpha="{itemAlpha}"/>
+	<s:BitmapImage id="icon" x="0" y="0" source="{OnIcon}" alpha="{itemAlpha}"/>
 </s:Group>

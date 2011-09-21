@@ -89,7 +89,7 @@
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<s:Image id="backgroundImage" source="@Embed('/assets/backgroundStartBurst.png')" verticalCenter="0" horizontalCenter="0" width="1500" height="1500" />
+		<s:BitmapImage id="backgroundImage" source="@Embed('/assets/backgroundStartBurst.png')" verticalCenter="0" horizontalCenter="0" width="1500" height="1500" />
 	</fx:Declarations>
 	
 	
